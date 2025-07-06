@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PR #452 Rebase Change Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .summary-card .card-body { display: flex; flex-direction: column; align-items: center; }
+        .summary-card .card-title { font-size: 1.1rem; }
+        .summary-card .card-value { font-size: 2rem; font-weight: bold; }
+        .table-striped tbody tr:nth-of-type(odd) { background-color: #f2f2f2; }
+        .badge-change { font-size: 1em; }
+    </style>
+</head>
+<body>
+<div class="container py-4">
+    <!-- Header Section -->
+    <div class="mb-4">
+        <h2 class="mb-1">Rebase Change Report for <span class="text-primary">PR #452</span></h2>
+        <div class="mb-2 text-muted">Build Pair: <span class="fw-semibold">build_20250701 → build_20250702</span></div>
+        <div class="mb-2">Associated Tests: <span class="badge bg-primary me-1">test_login_timeout</span><span class="badge bg-primary">test_session_sync</span></div>
+        <div class="alert alert-info py-2 px-3 mb-0" role="alert">
+            <strong>Summary:</strong> 2 tests affected, 4 new rows, 2 columns deleted, 3 numeric and 2 non-numeric value changes, 1 row key change detected.
+        </div>
+    </div>
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4 align-items-stretch">
+        <div class="col-6 col-md-2">
+            <div class="card summary-card text-center border-0 shadow-sm h-100">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <div class="card-title">New Rows</div>
+                    <div class="card-value text-success">4</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card summary-card text-center border-0 shadow-sm h-100">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <div class="card-title">Deleted Columns</div>
+                    <div class="card-value text-danger">2</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card summary-card text-center border-0 shadow-sm h-100">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <div class="card-title">Numeric Value Changes</div>
+                    <div class="card-value text-warning">3</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card summary-card text-center border-0 shadow-sm h-100">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <div class="card-title">Non-numeric Value Changes</div>
+                    <div class="card-value text-info">2</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <div class="card summary-card text-center border-0 shadow-sm h-100">
+                <div class="card-body h-100 d-flex flex-column justify-content-center">
+                    <div class="card-title">Row Key Changes</div>
+                    <div class="card-value text-primary">1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Detailed Change Tables -->
+    <div class="mb-4">
+        <h4>Numeric Value Changes</h4>
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Row Key</th>
+                    <th>Column</th>
+                    <th>Before</th>
+                    <th>After</th>
+                    <th>Δ Absolute</th>
+                    <th>Δ Relative</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>[user_123, region_US]</td>
+                    <td>response_time</td>
+                    <td>120ms</td>
+                    <td>210ms</td>
+                    <td><span class="badge bg-danger badge-change">+90ms</span></td>
+                    <td><span class="badge bg-danger badge-change">+75%</span></td>
+                </tr>
+                <tr>
+                    <td>[user_456, region_EU]</td>
+                    <td>latency</td>
+                    <td>80ms</td>
+                    <td>100ms</td>
+                    <td><span class="badge bg-warning text-dark badge-change">+20ms</span></td>
+                    <td><span class="badge bg-warning text-dark badge-change">+25%</span></td>
+                </tr>
+                <tr>
+                    <td>[user_789, region_APAC]</td>
+                    <td>score</td>
+                    <td>95</td>
+                    <td>90</td>
+                    <td><span class="badge bg-danger badge-change">-5</span></td>
+                    <td><span class="badge bg-danger badge-change">-5.3%</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-4">
+        <h4>Non-numeric Value Changes</h4>
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Row Key</th>
+                    <th>Column</th>
+                    <th>Before</th>
+                    <th>After</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>[user_456, region_EU]</td>
+                    <td>status</td>
+                    <td><span class="badge bg-secondary">pending</span></td>
+                    <td><span class="badge bg-success">active</span></td>
+                </tr>
+                <tr>
+                    <td>[user_789, region_APAC]</td>
+                    <td>flag</td>
+                    <td><span class="badge bg-danger">false</span></td>
+                    <td><span class="badge bg-success">true</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-4">
+        <h4>Row Key Changes</h4>
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Old Row Key</th>
+                    <th>New Row Key</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>[user_123, region_US]</td>
+                    <td>[user_123, region_USA]</td>
+                    <td>Region renamed for consistency</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="mb-4">
+        <h4>New/Deleted Rows & Columns</h4>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card border-success mb-3">
+                    <div class="card-header bg-success text-white">New Rows</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">user_456</li>
+                        <li class="list-group-item">user_789</li>
+                        <li class="list-group-item">user_999</li>
+                        <li class="list-group-item">user_1000</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-danger mb-3">
+                    <div class="card-header bg-danger text-white">Deleted Columns</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">legacy_flag</li>
+                        <li class="list-group-item">old_status</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
