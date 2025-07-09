@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rebase Tool Dashboard</title>
+    <!-- Tabler CSS -->
+    <link href="https://unpkg.com/@tabler/core@latest/dist/css/tabler.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="dashboard.js"></script>
+    <!-- Tabulator CSS -->
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+    <!-- Tabulator Bootstrap 5 Theme CSS -->
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">
+    <style>
+    /* Make Tabulator pagination/footer match Bootstrap card */
+    .tabulator .tabulator-footer {
+        background: #fff !important;
+        border-top: 1px solid #dee2e6 !important;
+        color: #212529;
+    }
+    .tabulator .tabulator-paginator label,
+    .tabulator .tabulator-paginator input,
+    .tabulator .tabulator-paginator select {
+        background: #fff !important;
+        color: #212529 !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 0.25rem;
+        margin: 0 2px;
+        padding: 2px 6px;
+        font-size: 1rem;
+    }
+    .tabulator .tabulator-paginator button {
+        background: #f8f9fa !important;
+        color: #212529 !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 0.25rem;
+        margin: 0 2px;
+        padding: 2px 10px;
+        font-size: 1rem;
+        transition: background 0.2s;
+    }
+    .tabulator .tabulator-paginator button.active,
+    .tabulator .tabulator-paginator button:focus {
+        background: #0d6efd !important;
+        color: #fff !important;
+        border-color: #0d6efd !important;
+    }
+    .tabulator-header .tabulator-col select {
+        min-width: 120px;
+        padding: 2px 8px;
+        border-radius: 0.25rem;
+        border: 1px solid #ced4da;
+        background: #fff;
+        color: #212529;
+        font-size: 1rem;
+    }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="page">
+        <header class="navbar navbar-expand-md navbar-light bg-white shadow-sm mb-4">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="#">rebase_tool</a>
+                <div class="d-none d-md-block ms-4 text-muted small">
+                    Build #47 &nbsp; Apr 24, 2024, 07:15 AM &nbsp; Commit: <span class="badge bg-secondary">a1b2c3d4</span>
+                </div>
+                <ul class="nav nav-tabs ms-auto" id="dashboardTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-current" data-bs-toggle="tab" data-bs-target="#current-build" type="button" role="tab">Current Build</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-history" data-bs-toggle="tab" data-bs-target="#historical-trends" type="button" role="tab">Historical Trends</button>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <main class="container-fluid">
+            <div class="tab-content" id="dashboardTabContent">
+                <div class="tab-pane fade show active" id="current-build" role="tabpanel">
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of tests currently failing in this build.">
+                                <div class="card-body">
+                                    <div class="fs-2 text-danger">🧪 150</div>
+                                    <div class="text-muted">Failing Tests</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of changes that were uniquely identified for rebase.">
+                                <div class="card-body">
+                                    <div class="fs-2 text-success">✅ 120</div>
+                                    <div class="text-muted">Change uniquely identified</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of changes that could not be uniquely identified.">
+                                <div class="card-body">
+                                    <div class="fs-2 text-warning">❓ 20</div>
+                                    <div class="text-muted">Change not uniquely identified</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of changes for which rebase is unavailable.">
+                                <div class="card-body">
+                                    <div class="fs-2 text-secondary">🚫 10</div>
+                                    <div class="text-muted">Rebase unavailable</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <div class="card-header fw-bold">Failing Tests</div>
+                        <div class="table-responsive">
+                            <div id="failing-tests-table"></div>
+                        </div>
+                    </div>
+                    <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var tableData = [
+                            { test: "test_login_timeout", status: "PR #125", builds: "build_20250701 → build_20250702", details: "reports/pr_452_report.html" },
+                            { test: "test_ui_theme_load", status: "Branch #some_branch", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_profile_update", status: "PR #126", builds: "build_20250701 → build_20250702", details: "reports/pr_453_report.html" },
+                            { test: "test_signup_flow", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null }
+                        ];
+                        new Tabulator("#failing-tests-table", {
+                            data: tableData,
+                            layout: "fitColumns",
+                            pagination: "local",
+                            paginationSize: 5,
+                            columns: [
+                                { title: "Test Name", field: "test", headerFilter: true },
+                                { 
+                                    title: "Status", 
+                                    field: "status", 
+                                    headerFilter: "select",
+                                    headerFilterParams: {
+                                        values: {
+                                            "": "All", // Show "All" instead of blank
+                                            "PR #125": "PR #125",
+                                            "PR #126": "PR #126",
+                                            "Branch #some_branch": "Branch #some_branch",
+                                            "Rebase unavailable": "Rebase unavailable"
+                                        }
+                                    },
+                                    formatter: function(cell) {
+                                        var val = cell.getValue();
+                                        if(val && val.startsWith('PR #')) {
+                                            return `<span class='badge bg-primary'>${val}</span>`;
+                                        } else if(val && val.startsWith('Branch #')) {
+                                            return `<span class='badge bg-info text-dark'>${val}</span>`;
+                                        } else if(val === "Rebase unavailable") {
+                                            return `<span class='badge bg-secondary'>Rebase unavailable</span>`;
+                                        } else {
+                                            return val;
+                                        }
+                                    }
+                                },
+                                { title: "Passing → Failing", field: "builds", headerFilter: true },
+                                { title: "Details", field: "details", hozAlign: "center", formatter: function(cell) {
+                                    var url = cell.getValue();
+                                    if(url) {
+                                        return `<a href='${url}' target='_blank' class='btn btn-sm btn-outline-primary'>View</a>`;
+                                    } else {
+                                        return `<button class='btn btn-sm btn-outline-secondary' disabled>—</button>`;
+                                    }
+                                } }
+                            ],
+                            height: "500px",
+                            responsiveLayout: true,
+                            movableColumns: true,
+                            tooltips: true,
+                        });
+                    });
+                    </script>
+                </div>
+                <div class="tab-pane fade" id="historical-trends" role="tabpanel">
+                    <div class="row mb-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header fw-bold">Failed Tests Over Last 10 Builds</div>
+                                <div class="card-body">
+                                    <canvas id="failedTestsChart" height="120"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div>Total PRs Created: <span class="fw-bold">47</span></div>
+                                    <div>PRs Merged: <span class="fw-bold text-success">41</span></div>
+                                    <div>Remaining: <span class="fw-bold text-warning">6</span></div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header fw-bold">Most Frequently Failing Tests</div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Test Name</th>
+                                                <th>Failures</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>test_login_timeout</td>
+                                                <td>7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>test_ui_theme_load</td>
+                                                <td>5</td>
+                                            </tr>
+                                            <tr>
+                                                <td>test_profile_update</td>
+                                                <td>4</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Bootstrap 5 JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Initialize Bootstrap tooltips
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+    </script>
+</body>
+</html>
