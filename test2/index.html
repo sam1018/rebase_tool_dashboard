@@ -10,8 +10,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="dashboard.js"></script>
     <!-- Tabulator CSS -->
     <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
     <!-- Tabulator Bootstrap 5 Theme CSS -->
@@ -86,7 +84,7 @@
                         <div class="col-6 col-md-3">
                             <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of tests currently failing in this build.">
                                 <div class="card-body">
-                                    <div class="fs-2 text-danger">🧪 150</div>
+                                    <div class="fs-2 text-danger">🧪 <span id="failing-tests-count"></span></div>
                                     <div class="text-muted">Failing Tests</div>
                                 </div>
                             </div>
@@ -94,7 +92,7 @@
                         <div class="col-6 col-md-3">
                             <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of changes that were uniquely identified for rebase.">
                                 <div class="card-body">
-                                    <div class="fs-2 text-success">✅ 120</div>
+                                    <div class="fs-2 text-success">✅ <span id="uniquely-identified-count"></span></div>
                                     <div class="text-muted">Change uniquely identified</div>
                                 </div>
                             </div>
@@ -102,7 +100,7 @@
                         <div class="col-6 col-md-3">
                             <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of changes that could not be uniquely identified.">
                                 <div class="card-body">
-                                    <div class="fs-2 text-warning">❓ 20</div>
+                                    <div class="fs-2 text-warning">❓ <span id="not-uniquely-identified-count"></span></div>
                                     <div class="text-muted">Change not uniquely identified</div>
                                 </div>
                             </div>
@@ -110,7 +108,7 @@
                         <div class="col-6 col-md-3">
                             <div class="card text-center border-0 shadow-sm" data-bs-toggle="tooltip" title="Number of changes for which rebase is unavailable.">
                                 <div class="card-body">
-                                    <div class="fs-2 text-secondary">🚫 10</div>
+                                    <div class="fs-2 text-secondary">🚫 <span id="rebase-unavailable-count"></span></div>
                                     <div class="text-muted">Rebase unavailable</div>
                                 </div>
                             </div>
@@ -124,7 +122,21 @@
                     </div>
                     <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
                     <script>
+                    // Test status variables (can be updated externally)
+                    var testStatus = {
+                        failingTests: 150,
+                        uniquelyIdentified: 120,
+                        notUniquelyIdentified: 20,
+                        rebaseUnavailable: 10
+                    };
+
                     document.addEventListener('DOMContentLoaded', function() {
+                        // Update test status cards
+                        document.getElementById('failing-tests-count').textContent = testStatus.failingTests;
+                        document.getElementById('uniquely-identified-count').textContent = testStatus.uniquelyIdentified;
+                        document.getElementById('not-uniquely-identified-count').textContent = testStatus.notUniquelyIdentified;
+                        document.getElementById('rebase-unavailable-count').textContent = testStatus.rebaseUnavailable;
+
                         var tableData = [
                             { test: "test_login_timeout", status: "PR #125", builds: "build_20250701 → build_20250702", details: "reports/pr_452_report.html" },
                             { test: "test_ui_theme_load", status: "Branch #some_branch", builds: "build_20250701 → build_20250702", details: null },
@@ -141,7 +153,7 @@
                                 { 
                                     title: "Status", 
                                     field: "status", 
-                                    headerFilter: "select",
+                                    headerFilter: "list",
                                     headerFilterParams: {
                                         values: {
                                             "": "All", // Show "All" instead of blank
