@@ -139,34 +139,57 @@
 
                         var tableData = [
                             { test: "test_login_timeout", status: "PR #125", builds: "build_20250701 → build_20250702", details: "reports/pr_452_report.html" },
-                            { test: "test_ui_theme_load", status: "Branch #some_branch", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_ui_theme_load", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
                             { test: "test_profile_update", status: "PR #126", builds: "build_20250701 → build_20250702", details: "reports/pr_453_report.html" },
-                            { test: "test_signup_flow", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null }
+                            { test: "test_signup_flow", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_password_reset", status: "PR #127", builds: "build_20250701 → build_20250702", details: "reports/pr_454_report.html" },
+                            { test: "test_email_verification", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_dashboard_load", status: "PR #128", builds: "build_20250701 → build_20250702", details: "reports/pr_455_report.html" },
+                            { test: "test_notification_popup", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_user_logout", status: "PR #129", builds: "build_20250701 → build_20250702", details: "reports/pr_456_report.html" },
+                            { test: "test_theme_switch", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_profile_picture_upload", status: "PR #130", builds: "build_20250701 → build_20250702", details: "reports/pr_457_report.html" },
+                            { test: "test_data_export", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_import_csv", status: "PR #131", builds: "build_20250701 → build_20250702", details: "reports/pr_458_report.html" },
+                            { test: "test_search_function", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_user_registration", status: "PR #132", builds: "build_20250701 → build_20250702", details: "reports/pr_459_report.html" },
+                            { test: "test_api_rate_limit", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_session_expiry", status: "PR #133", builds: "build_20250701 → build_20250702", details: "reports/pr_460_report.html" },
+                            { test: "test_multi_factor_auth", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
+                            { test: "test_user_preferences", status: "PR #134", builds: "build_20250701 → build_20250702", details: "reports/pr_461_report.html" },
+                            { test: "test_audit_log", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null }
                         ];
                         new Tabulator("#failing-tests-table", {
                             data: tableData,
                             layout: "fitColumns",
                             pagination: "local",
-                            paginationSize: 5,
+                            paginationSize: 20,
                             columns: [
-                                { title: "Test Name", field: "test", headerFilter: true },
+                                { title: "Test Name", field: "test", headerFilter: true, width: "30%" },
                                 { 
                                     title: "Status", 
                                     field: "status", 
                                     headerFilter: "list",
                                     headerFilterParams: {
                                         values: {
-                                            "": "All", // Show "All" instead of blank
+                                            "": "All",
                                             "PR #125": "PR #125",
                                             "PR #126": "PR #126",
-                                            "Branch #some_branch": "Branch #some_branch",
+                                            "Unable to uniquely identify library change": "Unable to uniquely identify library change",
                                             "Rebase unavailable": "Rebase unavailable"
                                         }
                                     },
                                     formatter: function(cell) {
                                         var val = cell.getValue();
                                         if(val && val.startsWith('PR #')) {
+                                            var prNumber = val.match(/PR #(\d+)/);
+                                            if(prNumber) {
+                                                var url = `https://github.com/yourorg/yourrepo/pull/${prNumber[1]}`;
+                                                return `<a href='${url}' target='_blank' class='badge bg-primary text-decoration-none'>${val}</a>`;
+                                            }
                                             return `<span class='badge bg-primary'>${val}</span>`;
+                                        } else if(val === "Unable to uniquely identify library change") {
+                                            return `<span class='badge bg-warning text-dark'>${val}</span>`;
                                         } else if(val && val.startsWith('Branch #')) {
                                             return `<span class='badge bg-info text-dark'>${val}</span>`;
                                         } else if(val === "Rebase unavailable") {
@@ -186,7 +209,7 @@
                                     }
                                 } }
                             ],
-                            height: "500px",
+                            height: "800px",
                             responsiveLayout: true,
                             movableColumns: true,
                             tooltips: true,
