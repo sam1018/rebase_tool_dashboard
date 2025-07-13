@@ -176,6 +176,19 @@
             color: var(--success-color);
         }
 
+        .section-subsection {
+            margin-bottom: 3rem;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
         .expandable-card {
             border: 1px solid var(--border-color);
             border-radius: var(--radius);
@@ -692,67 +705,47 @@
             </div>
             <div class="section-content">
                 <!-- Numerical Changes -->
-                <div class="expandable-card" data-target="numericalChanges">
-                    <div class="expandable-header">
-                        <span class="expandable-title">Numerical Changes</span>
-                        <span class="expandable-toggle">▼</span>
-                    </div>
-                    <div class="expandable-content" id="numericalChanges">
-                        <div id="numericalChangesTable"></div>
-                    </div>
+                <div class="section-subsection">
+                    <h3 class="subsection-title">Numerical Changes</h3>
+                    <div id="numericalChangesTable"></div>
                 </div>
 
                 <!-- Non-Numerical Changes -->
-                <div class="expandable-card" data-target="nonNumericalChanges">
-                    <div class="expandable-header">
-                        <span class="expandable-title">Non-Numerical Changes</span>
-                        <span class="expandable-toggle">▼</span>
-                    </div>
-                    <div class="expandable-content" id="nonNumericalChanges">
-                        <div id="nonNumericalChangesTable"></div>
-                    </div>
+                <div class="section-subsection">
+                    <h3 class="subsection-title">Non-Numerical Changes</h3>
+                    <div id="nonNumericalChangesTable"></div>
                 </div>
 
                 <!-- Column Changes -->
-                <div class="expandable-card" data-target="columnChanges">
-                    <div class="expandable-header">
-                        <span class="expandable-title">Column Changes</span>
-                        <span class="expandable-toggle">▼</span>
-                    </div>
-                    <div class="expandable-content" id="columnChanges">
-                        <div class="change-before-after">
-                            <div class="change-side after">
-                                <h4>New Columns</h4>
-                                <div id="newColumnsTable"></div>
-                            </div>
-                            <div class="change-side before">
-                                <h4>Deleted Columns</h4>
-                                <div id="deletedColumnsTable"></div>
-                            </div>
+                <div class="section-subsection">
+                    <h3 class="subsection-title">Column Changes</h3>
+                    <div class="change-before-after">
+                        <div class="change-side after">
+                            <h4>New Columns</h4>
+                            <div id="newColumnsTable"></div>
+                        </div>
+                        <div class="change-side before">
+                            <h4>Deleted Columns</h4>
+                            <div id="deletedColumnsTable"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Row Changes -->
-                <div class="expandable-card" data-target="rowChanges">
-                    <div class="expandable-header">
-                        <span class="expandable-title">Row Changes</span>
-                        <span class="expandable-toggle">▼</span>
-                    </div>
-                    <div class="expandable-content" id="rowChanges">
-                        <div class="change-before-after">
-                            <div class="change-side after">
-                                <h4>New Rows</h4>
-                                <div id="newRowsTable"></div>
-                            </div>
-                            <div class="change-side before">
-                                <h4>Deleted Rows</h4>
-                                <div id="deletedRowsTable"></div>
-                            </div>
+                <div class="section-subsection">
+                    <h3 class="subsection-title">Row Changes</h3>
+                    <div class="change-before-after">
+                        <div class="change-side after">
+                            <h4>New Rows</h4>
+                            <div id="newRowsTable"></div>
                         </div>
-                        <h4 class="modified-rows-header">Modified Rows</h4>
-                        <div id="modifiedRowsTable"></div>
+                        <div class="change-side before">
+                            <h4>Deleted Rows</h4>
+                            <div id="deletedRowsTable"></div>
+                        </div>
                     </div>
+                    <h4 class="modified-rows-header">Modified Rows</h4>
+                    <div id="modifiedRowsTable"></div>
                 </div>
             </div>
         </div>
@@ -762,7 +755,6 @@
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             initializePage();
-            setupExpandableCards();
         });
 
         function initializePage() {
@@ -1043,25 +1035,6 @@
                         return `<div style="background: var(--card-background); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius);">${cell.getValue()}</div>`;
                     }}
                 ]
-            });
-        }
-
-        function setupExpandableCards() {
-            document.querySelectorAll('.expandable-card').forEach(card => {
-                const header = card.querySelector('.expandable-header');
-                const content = card.querySelector('.expandable-content');
-                
-                header.addEventListener('click', () => {
-                    const isOpen = card.classList.contains('open');
-                    
-                    if (isOpen) {
-                        card.classList.remove('open');
-                        content.classList.remove('open');
-                    } else {
-                        card.classList.add('open');
-                        content.classList.add('open');
-                    }
-                });
             });
         }
     </script>
