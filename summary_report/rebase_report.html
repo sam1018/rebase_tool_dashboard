@@ -463,6 +463,16 @@
             line-height: 1.5;
         }
 
+        .download-center {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .simple-download {
+            text-align: center;
+            padding: 2rem;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -509,6 +519,9 @@
         const fromBuildTime = "2024-07-10 14:30:00";
         const toBuildId = "BUILD-2024-002";
         const toBuildTime = "2024-07-12 09:15:00";
+        
+        // Control variables
+        const showChangeDetails = true; // Set to false to hide the entire Change Details section
         
         const libraryChanges = [
             {
@@ -681,7 +694,6 @@
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Library Changes</h2>
-                <p class="section-subtitle">Dependencies and library updates in this rebase</p>
             </div>
             <div class="section-content">
                 <div id="libraryChangesTable"></div>
@@ -692,7 +704,6 @@
         <div class="section">
             <div class="section-header">
                 <h2 class="section-title">Failed Tests</h2>
-                <p class="section-subtitle">Tests that failed during rebase validation</p>
             </div>
             <div class="section-content">
                 <div id="failedTestsTable"></div>
@@ -700,22 +711,21 @@
         </div>
 
         <!-- Rebase Details Section -->
-        <div class="section">
+        <div class="section" id="changeDetailsSection">
             <div class="section-header">
-                <h2 class="section-title">Rebase Details</h2>
-                <p class="section-subtitle">Detailed analysis of changes and modifications</p>
+                <h2 class="section-title">Change Details</h2>
             </div>
             <div class="section-content">
                 <!-- Numerical Changes -->
                 <div class="section-subsection">
                     <h3 class="subsection-title">Numerical Changes</h3>
                     <div id="numericalChangesTable"></div>
-                </div>
-
-                <!-- Non-Numerical Changes -->
-                <div class="section-subsection">
-                    <h3 class="subsection-title">Non-Numerical Changes</h3>
-                    <div id="nonNumericalChangesTable"></div>
+                    <div class="download-center">
+                        <a href="#" class="download-link" onclick="downloadNumericalChangesCSV()" title="Download numerical changes as CSV">
+                            <span class="download-icon">📊</span>
+                            Download CSV
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Column Changes -->
@@ -747,19 +757,15 @@
                         </div>
                     </div>
                     <h4 class="modified-rows-header">Modified Rows</h4>
-                    <div id="modifiedRowsTable"></div>
+                    <div id="modifiedRowsTable">
+                        <div class="simple-download">
+                            <a href="#" class="download-link" onclick="downloadModifiedRowsCSV()" title="Download modified rows data as CSV">
+                                <span class="download-icon">📋</span>
+                                Download Modified Rows CSV
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Download Section -->
-        <div class="download-section">
-            <a href="#" class="download-link">
-                <span class="download-icon">⬇️</span>
-                Download Full Report
-            </a>
-            <div class="download-description">
-                Click the button above to download the complete rebase report, including all changes, diffs, and affected tests.
             </div>
         </div>
     </div>
@@ -781,11 +787,17 @@
             // Populate failed tests
             populateFailedTests();
 
-            // Populate rebase details
-            populateNumericalChanges();
-            populateNonNumericalChanges();
-            populateColumnChanges();
-            populateRowChanges();
+            // Show/hide Change Details section based on showChangeDetails boolean
+            const changeDetailsSection = document.getElementById('changeDetailsSection');
+            if (showChangeDetails) {
+                changeDetailsSection.style.display = 'block';
+                // Populate rebase details
+                populateNumericalChanges();
+                populateColumnChanges();
+                populateRowChanges();
+            } else {
+                changeDetailsSection.style.display = 'none';
+            }
         }
 
         function openBuildDetails(buildId) {
@@ -924,26 +936,6 @@
             });
         }
 
-        function populateNonNumericalChanges() {
-            if (nonNumericalChanges.length === 0) {
-                document.getElementById('nonNumericalChangesTable').innerHTML = '<div class="empty-state">No non-numerical changes detected</div>';
-                return;
-            }
-
-            new Tabulator("#nonNumericalChangesTable", {
-                data: nonNumericalChanges,
-                layout: "fitColumns",
-                pagination: "local",
-                paginationSize: 20,
-                paginationSizeSelector: [10, 20, 50, 100],
-                columns: [
-                    {title: "Test Name", field: "testName", width: 300},
-                    {title: "Table", field: "tableName", width: 150},
-                    {title: "Change Description", field: "change"}
-                ]
-            });
-        }
-
         function populateColumnChanges() {
             // New columns table
             if (newColumns.length === 0) {
@@ -1030,63 +1022,60 @@
                     ]
                 });
             }
+        }
 
-            // Modified rows download section
-            if (rowChanges.length === 0) {
-                document.getElementById('modifiedRowsTable').innerHTML = '<div class="empty-state">No modified rows</div>';
+        function downloadNumericalChangesCSV() {
+            if (numericalChanges.length === 0) {
+                alert('No numerical changes data available to download.');
                 return;
             }
 
-            // Generate download content for modified rows
-            const modifiedRowsCount = rowChanges.length;
-            const downloadSection = `
-                <div class="download-section">
-                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Modified Rows Comparison Data</h4>
-                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
-                        Found <strong>${modifiedRowsCount}</strong> modified row${modifiedRowsCount !== 1 ? 's' : ''} that require detailed comparison.
-                    </p>
-                    <a href="#" class="download-link" onclick="downloadModifiedRowsZip()" title="Download comparison data as ZIP file">
-                        <span class="download-icon">📦</span>
-                        Download Comparison Data (ZIP)
-                    </a>
-                    <div class="download-description">
-                        <p><strong>Instructions:</strong></p>
-                        <p>1. Download the ZIP file containing before/after data files</p>
-                        <p>2. Extract the ZIP file to a local directory</p>
-                        <p>3. Use Beyond Compare or similar diff tool to compare the files</p>
-                        <p>4. Files are formatted as CSV for easy comparison</p>
-                    </div>
-                </div>
-            `;
+            // Get headers from the first row
+            const headers = Object.keys(numericalChanges[0]).map(key => `"${formatColumnTitle(key)}"`).join(',');
             
-            document.getElementById('modifiedRowsTable').innerHTML = downloadSection;
+            // Generate CSV content
+            const csvData = numericalChanges.map(row => {
+                return Object.values(row).map(value => `"${value}"`).join(',');
+            });
+
+            const csvContent = [headers, ...csvData].join('\n');
+            downloadFile('numerical_changes.csv', csvContent);
         }
 
-        function downloadModifiedRowsZip() {
-            // Generate CSV content for before and after data
-            const beforeData = rowChanges.map(row => {
-                const rowData = { rowId: row.rowId, ...row.before };
-                return Object.entries(rowData).map(([key, value]) => `"${value}"`).join(',');
-            });
+        function downloadModifiedRowsCSV() {
+            if (rowChanges.length === 0) {
+                alert('No modified rows data available to download.');
+                return;
+            }
 
-            const afterData = rowChanges.map(row => {
-                const rowData = { rowId: row.rowId, ...row.after };
-                return Object.entries(rowData).map(([key, value]) => `"${value}"`).join(',');
-            });
-
-            // Get headers from the first row
-            const headers = rowChanges.length > 0 ? 
-                ['rowId', ...Object.keys(rowChanges[0].before)].map(key => `"${key}"`).join(',') : '';
-
-            const beforeCSV = [headers, ...beforeData].join('\n');
-            const afterCSV = [headers, ...afterData].join('\n');
-
-            // Create and download files
-            downloadFile('modified_rows_before.csv', beforeCSV);
-            downloadFile('modified_rows_after.csv', afterCSV);
+            // Create a combined dataset with before and after data
+            const csvData = [];
+            const headers = ['Row ID', 'Field', 'Before', 'After'];
             
-            // Show user notification
-            alert(`Downloaded 2 CSV files:\n- modified_rows_before.csv\n- modified_rows_after.csv\n\nUse Beyond Compare or similar tool to compare these files.`);
+            rowChanges.forEach(row => {
+                Object.keys(row.before).forEach(field => {
+                    csvData.push([
+                        row.rowId,
+                        field,
+                        row.before[field],
+                        row.after[field]
+                    ]);
+                });
+            });
+
+            const csvContent = [
+                headers.map(h => `"${h}"`).join(','),
+                ...csvData.map(row => row.map(cell => `"${cell}"`).join(','))
+            ].join('\n');
+
+            downloadFile('modified_rows.csv', csvContent);
+        }
+
+        function formatColumnTitle(key) {
+            return key.replace(/([A-Z])/g, ' $1')
+                     .replace(/^./, str => str.toUpperCase())
+                     .replace(/diff/gi, 'Diff')
+                     .replace(/id/gi, 'ID');
         }
 
         function downloadFile(filename, content) {
