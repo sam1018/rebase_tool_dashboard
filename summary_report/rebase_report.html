@@ -833,29 +833,74 @@
                 return;
             }
 
+            // Generate columns dynamically based on the data structure
+            const generateColumns = (data) => {
+                if (data.length === 0) return [];
+                
+                const firstRow = data[0];
+                const columns = [];
+                let responsiveIndex = 0;
+                
+                Object.keys(firstRow).forEach(key => {
+                    const column = {
+                        title: formatColumnTitle(key),
+                        field: key,
+                        minWidth: getColumnMinWidth(key),
+                        responsive: responsiveIndex++
+                    };
+                    
+                    // Add special formatters for specific fields
+                    if (key === 'relativeDiff') {
+                        column.formatter = function(cell) {
+                            const value = cell.getValue();
+                            if (typeof value === 'number') {
+                                const isPositive = value > 0;
+                                const arrow = isPositive ? '↑' : '↓';
+                                return `<span style="font-weight: 500;">${arrow} ${Math.abs(value)}%</span>`;
+                            }
+                            return value;
+                        };
+                    } else if (key === 'absoluteDiff') {
+                        column.formatter = function(cell) {
+                            const value = cell.getValue();
+                            return `<span style="font-weight: 500;">${value}</span>`;
+                        };
+                    }
+                    
+                    columns.push(column);
+                });
+                
+                return columns;
+            };
+
+            const formatColumnTitle = (key) => {
+                return key.replace(/([A-Z])/g, ' $1')
+                         .replace(/^./, str => str.toUpperCase())
+                         .replace(/diff/gi, 'Diff')
+                         .replace(/id/gi, 'ID');
+            };
+
+            const getColumnMinWidth = (key) => {
+                const widthMap = {
+                    'testName': 200,
+                    'tableName': 100,
+                    'row': 100,
+                    'previousValue': 100,
+                    'newValue': 100,
+                    'absoluteDiff': 100,
+                    'relativeDiff': 120
+                };
+                return widthMap[key] || 100;
+            };
+
             new Tabulator("#numericalChangesTable", {
                 data: numericalChanges,
-                layout: "fitColumns",
+                layout: "fitDataTable",
+                responsiveLayout: "collapse",
                 pagination: "local",
                 paginationSize: 20,
                 paginationSizeSelector: [10, 20, 50, 100],
-                columns: [
-                    {title: "Test Name", field: "testName", width: 300},
-                    {title: "Table", field: "tableName", width: 150},
-                    {title: "Row", field: "row", width: 150},
-                    {title: "Previous Value", field: "previousValue", width: 120},
-                    {title: "New Value", field: "newValue", width: 120},
-                    {title: "Absolute Diff", field: "absoluteDiff", width: 120, formatter: function(cell) {
-                        const value = cell.getValue();
-                        return `<span style="font-weight: 500;">${value}</span>`;
-                    }},
-                    {title: "Relative Diff (%)", field: "relativeDiff", width: 140, formatter: function(cell) {
-                        const value = cell.getValue();
-                        const isPositive = value > 0;
-                        const arrow = isPositive ? '↑' : '↓';
-                        return `<span style="font-weight: 500;">${arrow} ${Math.abs(value)}%</span>`;
-                    }}
-                ]
+                columns: generateColumns(numericalChanges)
             });
         }
 
