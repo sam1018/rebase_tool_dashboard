@@ -590,29 +590,6 @@
             }
         ];
         
-        const nonNumericalChanges = [
-            {
-                testName: "test_data_validation.py::test_schema_compliance",
-                tableName: "user_profiles",
-                change: "Updated data validation logic for enhanced accuracy"
-            },
-            {
-                testName: "test_performance.py::test_cache_efficiency",
-                tableName: "cache_metrics",
-                change: "Implemented new caching mechanism for improved performance"
-            },
-            {
-                testName: "test_error_handling.py::test_exception_messages",
-                tableName: "error_logs",
-                change: "Modified error handling to provide more descriptive messages"
-            },
-            {
-                testName: "test_database.py::test_connection_pool",
-                tableName: "db_connections",
-                change: "Refactored database connection pooling configuration"
-            }
-        ];
-        
         const newColumns = [
             {
                 testName: "test_user_tracking.py::test_session_management",
@@ -667,19 +644,6 @@
                 testName: "test_cleanup.py::test_test_data_removal",
                 tableName: "user_accounts",
                 rowData: { id: 1202, type: "Test Account", reason: "Test data cleanup" }
-            }
-        ];
-        
-        const rowChanges = [
-            {
-                rowId: 1345,
-                before: { status: "Pending", priority: "Low", assignee: "unassigned" },
-                after: { status: "In Progress", priority: "High", assignee: "alice.johnson" }
-            },
-            {
-                rowId: 1346,
-                before: { category: "Bug", severity: "Medium", estimate: "3h" },
-                after: { category: "Enhancement", severity: "Low", estimate: "1h" }
             }
         ];
         
