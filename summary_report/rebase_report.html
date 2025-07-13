@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
     
     <style>
         * {
@@ -41,9 +43,9 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem 2rem;
         }
 
         .header {
@@ -278,6 +280,7 @@
             padding: 1rem;
             border-radius: var(--radius);
             border: 1px solid var(--border-color);
+            background: var(--card-background);
         }
 
         .change-side h4 {
@@ -286,24 +289,7 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-        }
-
-        .before {
-            background: #fef2f2;
-            border-color: #fecaca;
-        }
-
-        .before h4 {
-            color: var(--error-color);
-        }
-
-        .after {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-
-        .after h4 {
-            color: var(--success-color);
+            color: var(--text-primary);
         }
 
         .list-group {
@@ -332,6 +318,134 @@
             padding: 3rem 2rem;
             color: var(--text-muted);
             font-style: italic;
+        }
+
+        .tabulator-table {
+            border: none;
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-header {
+            background: var(--card-background) !important;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tabulator-col {
+            background: var(--card-background) !important;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .tabulator-col-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tabulator-row {
+            border-bottom: 1px solid var(--border-color);
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-row:hover {
+            background-color: #f8fafc !important;
+        }
+
+        .tabulator-row-even {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-row-odd {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-cell {
+            border-right: 1px solid var(--border-color);
+            background: transparent !important;
+        }
+
+        .tabulator-footer {
+            background: var(--card-background) !important;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tabulator-pagination {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-paginator {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-page {
+            background: var(--card-background) !important;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .tabulator-page:hover {
+            background: var(--background-color) !important;
+        }
+
+        .tabulator-page.active {
+            background: var(--primary-color) !important;
+            color: white;
+        }
+
+        .tabulator-pages {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-page-size {
+            background: var(--card-background) !important;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .tabulator-page-counter {
+            background: var(--card-background) !important;
+            color: var(--text-primary);
+        }
+
+        .tabulator-tableHolder {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-tableholder {
+            background: var(--card-background) !important;
+        }
+
+        /* Override any remaining grey backgrounds with more specific selectors */
+        .tabulator .tabulator-footer,
+        .tabulator .tabulator-pagination,
+        .tabulator .tabulator-paginator,
+        .tabulator .tabulator-pages,
+        .tabulator .tabulator-tableHolder,
+        .tabulator .tabulator-tableholder {
+            background: var(--card-background) !important;
+        }
+
+        /* Ensure table body and empty areas are white */
+        .tabulator-table .tabulator-tableHolder,
+        .tabulator-table .tabulator-tableholder,
+        .tabulator-table tbody,
+        .tabulator-table .tabulator-placeholder {
+            background: var(--card-background) !important;
+        }
+
+        /* Remove any default grey styling */
+        .tabulator-table * {
+            background-color: inherit;
+        }
+
+        .tabulator-table .tabulator-cell,
+        .tabulator-table .tabulator-row {
+            background: var(--card-background) !important;
+        }
+
+        .modified-rows-header {
+            margin: 2rem 0 1rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         @media (max-width: 768px) {
@@ -409,39 +523,123 @@
             "test_regression.py::test_baseline_comparison"
         ];
         
-        const numericalChanges = {
-            "Total Records": { before: 1523, after: 1547 },
-            "Average Processing Time": { before: "2.34s", after: "2.18s" },
-            "Memory Usage (MB)": { before: 512, after: 487 },
-            "Error Rate (%)": { before: 0.23, after: 0.15 }
-        };
+        const numericalChanges = [
+            {
+                testName: "test_data_validation.py::test_numeric_ranges",
+                tableName: "user_metrics",
+                row: "total_count",
+                previousValue: 1523,
+                newValue: 1547,
+                absoluteDiff: 24,
+                relativeDiff: 1.6
+            },
+            {
+                testName: "test_performance.py::test_query_execution_time",
+                tableName: "performance_stats",
+                row: "avg_processing_time",
+                previousValue: "2.34s",
+                newValue: "2.18s",
+                absoluteDiff: "-0.16s",
+                relativeDiff: -6.8
+            },
+            {
+                testName: "test_memory_usage.py::test_memory_consumption",
+                tableName: "system_metrics",
+                row: "memory_usage_mb",
+                previousValue: 512,
+                newValue: 487,
+                absoluteDiff: -25,
+                relativeDiff: -4.9
+            },
+            {
+                testName: "test_error_tracking.py::test_error_rate",
+                tableName: "error_logs",
+                row: "error_percentage",
+                previousValue: 0.23,
+                newValue: 0.15,
+                absoluteDiff: -0.08,
+                relativeDiff: -34.8
+            }
+        ];
         
         const nonNumericalChanges = [
-            "Updated data validation logic for enhanced accuracy",
-            "Implemented new caching mechanism for improved performance",
-            "Modified error handling to provide more descriptive messages",
-            "Refactored database connection pooling configuration"
+            {
+                testName: "test_data_validation.py::test_schema_compliance",
+                tableName: "user_profiles",
+                change: "Updated data validation logic for enhanced accuracy"
+            },
+            {
+                testName: "test_performance.py::test_cache_efficiency",
+                tableName: "cache_metrics",
+                change: "Implemented new caching mechanism for improved performance"
+            },
+            {
+                testName: "test_error_handling.py::test_exception_messages",
+                tableName: "error_logs",
+                change: "Modified error handling to provide more descriptive messages"
+            },
+            {
+                testName: "test_database.py::test_connection_pool",
+                tableName: "db_connections",
+                change: "Refactored database connection pooling configuration"
+            }
         ];
         
         const newColumns = [
-            "user_session_id",
-            "last_activity_timestamp",
-            "feature_flag_status"
+            {
+                testName: "test_user_tracking.py::test_session_management",
+                tableName: "user_sessions",
+                columnName: "user_session_id"
+            },
+            {
+                testName: "test_activity_monitor.py::test_timestamp_tracking",
+                tableName: "user_activity",
+                columnName: "last_activity_timestamp"
+            },
+            {
+                testName: "test_feature_flags.py::test_flag_status",
+                tableName: "feature_config",
+                columnName: "feature_flag_status"
+            }
         ];
         
         const deletedColumns = [
-            "legacy_user_id",
-            "deprecated_status_field"
+            {
+                testName: "test_legacy_support.py::test_old_user_id",
+                tableName: "user_profiles",
+                columnName: "legacy_user_id"
+            },
+            {
+                testName: "test_status_cleanup.py::test_deprecated_field",
+                tableName: "status_tracking",
+                columnName: "deprecated_status_field"
+            }
         ];
         
         const newRows = [
-            { id: 1548, type: "Premium User", status: "Active" },
-            { id: 1549, type: "Trial User", status: "Pending" }
+            {
+                testName: "test_premium_users.py::test_new_premium_account",
+                tableName: "user_accounts",
+                rowData: { id: 1548, type: "Premium User", status: "Active" }
+            },
+            {
+                testName: "test_trial_users.py::test_new_trial_signup",
+                tableName: "user_accounts",
+                rowData: { id: 1549, type: "Trial User", status: "Pending" }
+            }
         ];
         
         const deletedRows = [
-            { id: 1201, type: "Inactive User", reason: "Account closed" },
-            { id: 1202, type: "Test Account", reason: "Test data cleanup" }
+            {
+                testName: "test_cleanup.py::test_inactive_user_removal",
+                tableName: "user_accounts",
+                rowData: { id: 1201, type: "Inactive User", reason: "Account closed" }
+            },
+            {
+                testName: "test_cleanup.py::test_test_data_removal",
+                tableName: "user_accounts",
+                rowData: { id: 1202, type: "Test Account", reason: "Test data cleanup" }
+            }
         ];
         
         const rowChanges = [
@@ -461,19 +659,7 @@
     <div class="container">
         <!-- Header Section -->
         <div class="header">
-            <h1>Test Rebase Report</h1>
             <div class="build-transition" id="buildTransition"></div>
-            <div class="build-details">
-                <div class="build-info">
-                    <div><strong>From Build:</strong></div>
-                    <div id="fromBuildDetails"></div>
-                </div>
-                <div class="arrow">→</div>
-                <div class="build-info">
-                    <div><strong>To Build:</strong></div>
-                    <div id="toBuildDetails"></div>
-                </div>
-            </div>
         </div>
 
         <!-- Library Changes Section -->
@@ -483,20 +669,7 @@
                 <p class="section-subtitle">Dependencies and library updates in this rebase</p>
             </div>
             <div class="section-content">
-                <div class="table-container">
-                    <table class="table" id="libraryChangesTable">
-                        <thead>
-                            <tr>
-                                <th>Library</th>
-                                <th>Changelist</th>
-                                <th>Author</th>
-                                <th>JIRA</th>
-                            </tr>
-                        </thead>
-                        <tbody id="libraryChangesBody">
-                        </tbody>
-                    </table>
-                </div>
+                <div id="libraryChangesTable"></div>
             </div>
         </div>
 
@@ -507,7 +680,7 @@
                 <p class="section-subtitle">Tests that failed during rebase validation</p>
             </div>
             <div class="section-content">
-                <div id="failedTestsList"></div>
+                <div id="failedTestsTable"></div>
             </div>
         </div>
 
@@ -525,7 +698,7 @@
                         <span class="expandable-toggle">▼</span>
                     </div>
                     <div class="expandable-content" id="numericalChanges">
-                        <div id="numericalChangesContent"></div>
+                        <div id="numericalChangesTable"></div>
                     </div>
                 </div>
 
@@ -536,7 +709,7 @@
                         <span class="expandable-toggle">▼</span>
                     </div>
                     <div class="expandable-content" id="nonNumericalChanges">
-                        <ul class="list-group" id="nonNumericalChangesList"></ul>
+                        <div id="nonNumericalChangesTable"></div>
                     </div>
                 </div>
 
@@ -550,11 +723,11 @@
                         <div class="change-before-after">
                             <div class="change-side after">
                                 <h4>New Columns</h4>
-                                <ul class="list-group" id="newColumnsList"></ul>
+                                <div id="newColumnsTable"></div>
                             </div>
                             <div class="change-side before">
                                 <h4>Deleted Columns</h4>
-                                <ul class="list-group" id="deletedColumnsList"></ul>
+                                <div id="deletedColumnsTable"></div>
                             </div>
                         </div>
                     </div>
@@ -570,15 +743,15 @@
                         <div class="change-before-after">
                             <div class="change-side after">
                                 <h4>New Rows</h4>
-                                <div id="newRowsList"></div>
+                                <div id="newRowsTable"></div>
                             </div>
                             <div class="change-side before">
                                 <h4>Deleted Rows</h4>
-                                <div id="deletedRowsList"></div>
+                                <div id="deletedRowsTable"></div>
                             </div>
                         </div>
-                        <h4 style="margin: 2rem 0 1rem 0;">Modified Rows</h4>
-                        <div id="modifiedRowsList"></div>
+                        <h4 class="modified-rows-header">Modified Rows</h4>
+                        <div id="modifiedRowsTable"></div>
                     </div>
                 </div>
             </div>
@@ -595,8 +768,6 @@
         function initializePage() {
             // Populate build transition
             document.getElementById('buildTransition').textContent = `${fromBuildId} → ${toBuildId}`;
-            document.getElementById('fromBuildDetails').innerHTML = `<span class="code">${fromBuildId}</span><br><small>${fromBuildTime}</small>`;
-            document.getElementById('toBuildDetails').innerHTML = `<span class="code">${toBuildId}</span><br><small>${toBuildTime}</small>`;
 
             // Populate library changes
             populateLibraryChanges();
@@ -612,123 +783,222 @@
         }
 
         function populateLibraryChanges() {
-            const tbody = document.getElementById('libraryChangesBody');
             if (libraryChanges.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No library changes detected</td></tr>';
+                document.getElementById('libraryChangesTable').innerHTML = '<div class="empty-state">No library changes detected</div>';
                 return;
             }
 
-            tbody.innerHTML = libraryChanges.map(change => `
-                <tr>
-                    <td><span class="code">${change.library}</span></td>
-                    <td><span class="badge badge-primary">${change.changelist}</span></td>
-                    <td>${change.author}</td>
-                    <td><span class="badge badge-warning">${change.jira}</span></td>
-                </tr>
-            `).join('');
+            new Tabulator("#libraryChangesTable", {
+                data: libraryChanges,
+                layout: "fitColumns",
+                pagination: "local",
+                paginationSize: 20,
+                paginationSizeSelector: [10, 20, 50, 100],
+                columns: [
+                    {title: "Library", field: "library"},
+                    {title: "Changelist", field: "changelist"},
+                    {title: "Author", field: "author"},
+                    {title: "JIRA", field: "jira"}
+                ]
+            });
         }
 
         function populateFailedTests() {
-            const container = document.getElementById('failedTestsList');
             if (failedTests.length === 0) {
-                container.innerHTML = '<div class="empty-state">No failed tests</div>';
+                document.getElementById('failedTestsTable').innerHTML = '<div class="empty-state">No failed tests</div>';
                 return;
             }
 
-            container.innerHTML = failedTests.map(test => `
-                <div class="test-item">${test}</div>
-            `).join('');
+            const testData = failedTests.map((test, index) => ({
+                id: index + 1,
+                test: test
+            }));
+
+            new Tabulator("#failedTestsTable", {
+                data: testData,
+                layout: "fitColumns",
+                pagination: "local",
+                paginationSize: 20,
+                paginationSizeSelector: [10, 20, 50, 100],
+                columns: [
+                    {title: "#", field: "id", width: 60},
+                    {title: "Failed Test", field: "test"}
+                ]
+            });
         }
 
         function populateNumericalChanges() {
-            const container = document.getElementById('numericalChangesContent');
-            const changes = Object.entries(numericalChanges).map(([key, value]) => `
-                <div class="change-before-after">
-                    <div class="change-side before">
-                        <h4>Before</h4>
-                        <div class="stat-number">${value.before}</div>
-                        <div class="stat-label">${key}</div>
-                    </div>
-                    <div class="change-side after">
-                        <h4>After</h4>
-                        <div class="stat-number">${value.after}</div>
-                        <div class="stat-label">${key}</div>
-                    </div>
-                </div>
-            `).join('');
+            if (numericalChanges.length === 0) {
+                document.getElementById('numericalChangesTable').innerHTML = '<div class="empty-state">No numerical changes detected</div>';
+                return;
+            }
 
-            container.innerHTML = changes;
+            new Tabulator("#numericalChangesTable", {
+                data: numericalChanges,
+                layout: "fitColumns",
+                pagination: "local",
+                paginationSize: 20,
+                paginationSizeSelector: [10, 20, 50, 100],
+                columns: [
+                    {title: "Test Name", field: "testName", width: 300},
+                    {title: "Table", field: "tableName", width: 150},
+                    {title: "Row", field: "row", width: 150},
+                    {title: "Previous Value", field: "previousValue", width: 120},
+                    {title: "New Value", field: "newValue", width: 120},
+                    {title: "Absolute Diff", field: "absoluteDiff", width: 120, formatter: function(cell) {
+                        const value = cell.getValue();
+                        return `<span style="font-weight: 500;">${value}</span>`;
+                    }},
+                    {title: "Relative Diff (%)", field: "relativeDiff", width: 140, formatter: function(cell) {
+                        const value = cell.getValue();
+                        const isPositive = value > 0;
+                        const arrow = isPositive ? '↑' : '↓';
+                        return `<span style="font-weight: 500;">${arrow} ${Math.abs(value)}%</span>`;
+                    }}
+                ]
+            });
         }
 
         function populateNonNumericalChanges() {
-            const container = document.getElementById('nonNumericalChangesList');
-            container.innerHTML = nonNumericalChanges.map(change => `
-                <li class="list-item">${change}</li>
-            `).join('');
+            if (nonNumericalChanges.length === 0) {
+                document.getElementById('nonNumericalChangesTable').innerHTML = '<div class="empty-state">No non-numerical changes detected</div>';
+                return;
+            }
+
+            new Tabulator("#nonNumericalChangesTable", {
+                data: nonNumericalChanges,
+                layout: "fitColumns",
+                pagination: "local",
+                paginationSize: 20,
+                paginationSizeSelector: [10, 20, 50, 100],
+                columns: [
+                    {title: "Test Name", field: "testName", width: 300},
+                    {title: "Table", field: "tableName", width: 150},
+                    {title: "Change Description", field: "change"}
+                ]
+            });
         }
 
         function populateColumnChanges() {
-            const newContainer = document.getElementById('newColumnsList');
-            const deletedContainer = document.getElementById('deletedColumnsList');
+            // New columns table
+            if (newColumns.length === 0) {
+                document.getElementById('newColumnsTable').innerHTML = '<div class="empty-state">No new columns</div>';
+            } else {
+                new Tabulator("#newColumnsTable", {
+                    data: newColumns,
+                    layout: "fitColumns",
+                    pagination: "local",
+                    paginationSize: 10,
+                    paginationSizeSelector: [5, 10, 20],
+                    columns: [
+                        {title: "Test Name", field: "testName", width: 300},
+                        {title: "Table", field: "tableName", width: 150},
+                        {title: "Column Name", field: "columnName"}
+                    ]
+                });
+            }
 
-            newContainer.innerHTML = newColumns.length > 0 
-                ? newColumns.map(col => `<li class="list-item"><span class="code">${col}</span></li>`).join('')
-                : '<li class="list-item empty-state">No new columns</li>';
-
-            deletedContainer.innerHTML = deletedColumns.length > 0
-                ? deletedColumns.map(col => `<li class="list-item"><span class="code">${col}</span></li>`).join('')
-                : '<li class="list-item empty-state">No deleted columns</li>';
+            // Deleted columns table
+            if (deletedColumns.length === 0) {
+                document.getElementById('deletedColumnsTable').innerHTML = '<div class="empty-state">No deleted columns</div>';
+            } else {
+                new Tabulator("#deletedColumnsTable", {
+                    data: deletedColumns,
+                    layout: "fitColumns",
+                    pagination: "local",
+                    paginationSize: 10,
+                    paginationSizeSelector: [5, 10, 20],
+                    columns: [
+                        {title: "Test Name", field: "testName", width: 300},
+                        {title: "Table", field: "tableName", width: 150},
+                        {title: "Column Name", field: "columnName"}
+                    ]
+                });
+            }
         }
 
         function populateRowChanges() {
-            const newContainer = document.getElementById('newRowsList');
-            const deletedContainer = document.getElementById('deletedRowsList');
-            const modifiedContainer = document.getElementById('modifiedRowsList');
+            // New rows table
+            if (newRows.length === 0) {
+                document.getElementById('newRowsTable').innerHTML = '<div class="empty-state">No new rows</div>';
+            } else {
+                const newRowsData = newRows.map(row => ({
+                    testName: row.testName,
+                    tableName: row.tableName,
+                    rowInfo: Object.entries(row.rowData).map(([key, value]) => `${key}: ${value}`).join(' | ')
+                }));
 
-            // New rows
-            newContainer.innerHTML = newRows.length > 0
-                ? newRows.map(row => `
-                    <div class="change-item">
-                        <strong>ID:</strong> ${row.id} | 
-                        <strong>Type:</strong> ${row.type} | 
-                        <strong>Status:</strong> ${row.status}
-                    </div>
-                `).join('')
-                : '<div class="empty-state">No new rows</div>';
+                new Tabulator("#newRowsTable", {
+                    data: newRowsData,
+                    layout: "fitColumns",
+                    pagination: "local",
+                    paginationSize: 10,
+                    paginationSizeSelector: [5, 10, 20],
+                    columns: [
+                        {title: "Test Name", field: "testName", width: 300},
+                        {title: "Table", field: "tableName", width: 150},
+                        {title: "Row Data", field: "rowInfo"}
+                    ]
+                });
+            }
 
-            // Deleted rows
-            deletedContainer.innerHTML = deletedRows.length > 0
-                ? deletedRows.map(row => `
-                    <div class="change-item">
-                        <strong>ID:</strong> ${row.id} | 
-                        <strong>Type:</strong> ${row.type} | 
-                        <strong>Reason:</strong> ${row.reason}
-                    </div>
-                `).join('')
-                : '<div class="empty-state">No deleted rows</div>';
+            // Deleted rows table
+            if (deletedRows.length === 0) {
+                document.getElementById('deletedRowsTable').innerHTML = '<div class="empty-state">No deleted rows</div>';
+            } else {
+                const deletedRowsData = deletedRows.map(row => ({
+                    testName: row.testName,
+                    tableName: row.tableName,
+                    rowInfo: Object.entries(row.rowData).map(([key, value]) => `${key}: ${value}`).join(' | ')
+                }));
 
-            // Modified rows
-            modifiedContainer.innerHTML = rowChanges.length > 0
-                ? rowChanges.map(row => `
-                    <div class="change-item">
-                        <strong>Row ID:</strong> ${row.rowId}
-                        <div class="change-before-after" style="margin-top: 1rem;">
-                            <div class="change-side before">
-                                <h4>Before</h4>
-                                ${Object.entries(row.before).map(([key, value]) => 
-                                    `<div><strong>${key}:</strong> ${value}</div>`
-                                ).join('')}
-                            </div>
-                            <div class="change-side after">
-                                <h4>After</h4>
-                                ${Object.entries(row.after).map(([key, value]) => 
-                                    `<div><strong>${key}:</strong> ${value}</div>`
-                                ).join('')}
-                            </div>
-                        </div>
-                    </div>
-                `).join('')
-                : '<div class="empty-state">No modified rows</div>';
+                new Tabulator("#deletedRowsTable", {
+                    data: deletedRowsData,
+                    layout: "fitColumns",
+                    pagination: "local",
+                    paginationSize: 10,
+                    paginationSizeSelector: [5, 10, 20],
+                    columns: [
+                        {title: "Test Name", field: "testName", width: 300},
+                        {title: "Table", field: "tableName", width: 150},
+                        {title: "Row Data", field: "rowInfo"}
+                    ]
+                });
+            }
+
+            // Modified rows with Tabulator
+            if (rowChanges.length === 0) {
+                document.getElementById('modifiedRowsTable').innerHTML = '<div class="empty-state">No modified rows</div>';
+                return;
+            }
+
+            const modifiedRowsData = rowChanges.map(row => {
+                const beforeData = Object.entries(row.before).map(([key, value]) => `${key}: ${value}`).join(' | ');
+                const afterData = Object.entries(row.after).map(([key, value]) => `${key}: ${value}`).join(' | ');
+                
+                return {
+                    rowId: row.rowId,
+                    before: beforeData,
+                    after: afterData
+                };
+            });
+
+            new Tabulator("#modifiedRowsTable", {
+                data: modifiedRowsData,
+                layout: "fitColumns",
+                pagination: "local",
+                paginationSize: 20,
+                paginationSizeSelector: [10, 20, 50, 100],
+                columns: [
+                    {title: "Row ID", field: "rowId", width: 100},
+                    {title: "Before", field: "before", formatter: function(cell) {
+                        return `<div style="background: var(--card-background); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius);">${cell.getValue()}</div>`;
+                    }},
+                    {title: "After", field: "after", formatter: function(cell) {
+                        return `<div style="background: var(--card-background); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius);">${cell.getValue()}</div>`;
+                    }}
+                ]
+            });
         }
 
         function setupExpandableCards() {
