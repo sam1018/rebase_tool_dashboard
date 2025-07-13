@@ -516,10 +516,8 @@
 <body>
     <script>
         // <generated_data>
-        const fromBuildId = "BUILD-2024-001";
-        const fromBuildTime = "2024-07-10 14:30:00";
-        const toBuildId = "BUILD-2024-002";
-        const toBuildTime = "2024-07-12 09:15:00";
+        const fromBuildId = "8294856";
+        const toBuildId = "8294872";
         
         // Control variables
         const showChangeDetails = true; // Set to false to hide the entire Change Details section
@@ -743,7 +741,7 @@
         function initializePage() {
             // Populate build transition with clickable links
             const buildTransitionElement = document.getElementById('buildTransition');
-            buildTransitionElement.innerHTML = `<a href="#" class="build-link" onclick="openBuildDetails('${fromBuildId}')">${fromBuildId}</a> → <a href="#" class="build-link" onclick="openBuildDetails('${toBuildId}')">${toBuildId}</a>`;
+            buildTransitionElement.innerHTML = `TeamCity Build: <a href="#" class="build-link" onclick="openBuildDetails('${fromBuildId}')">${fromBuildId}</a> → <a href="#" class="build-link" onclick="openBuildDetails('${toBuildId}')">${toBuildId}</a>`;
 
             // Populate library changes
             populateLibraryChanges();
