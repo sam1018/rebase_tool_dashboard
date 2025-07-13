@@ -206,24 +206,19 @@
                                     formatter: function(cell) {
                                         var val = cell.getValue();
                                         if(val && val.includes('→')) {
-                                            var builds = val.split(' → ');
-                                            var fromBuild = builds[0].trim();
-                                            var toBuild = builds[1].trim();
-                                            
-                                            // Generate consistent colors based on build names
-                                            function getBuildColor(buildName) {
+                                            // Generate consistent color based on the entire build transition
+                                            function getBuildTransitionColor(buildTransition) {
                                                 var hash = 0;
-                                                for (var i = 0; i < buildName.length; i++) {
-                                                    hash = buildName.charCodeAt(i) + ((hash << 5) - hash);
+                                                for (var i = 0; i < buildTransition.length; i++) {
+                                                    hash = buildTransition.charCodeAt(i) + ((hash << 5) - hash);
                                                 }
                                                 var hue = Math.abs(hash % 360);
                                                 return `hsl(${hue}, 70%, 90%)`;
                                             }
                                             
-                                            var fromColor = getBuildColor(fromBuild);
-                                            var toColor = getBuildColor(toBuild);
+                                            var transitionColor = getBuildTransitionColor(val);
                                             
-                                            return `<span style='background-color: ${fromColor}; padding: 2px 4px; border-radius: 3px; margin-right: 4px;'>${fromBuild}</span>→<span style='background-color: ${toColor}; padding: 2px 4px; border-radius: 3px; margin-left: 4px;'>${toBuild}</span>`;
+                                            return `<span style='background-color: ${transitionColor}; padding: 2px 4px; border-radius: 3px; display: inline-block;'>${val}</span>`;
                                         }
                                         return val;
                                     }
