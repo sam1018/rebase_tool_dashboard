@@ -138,26 +138,26 @@
                         document.getElementById('rebase-unavailable-count').textContent = testStatus.rebaseUnavailable;
 
                         var tableData = [
-                            { test: "test_login_timeout", status: "PR #125", builds: "build_20250701 → build_20250702", details: "reports/pr_452_report.html" },
-                            { test: "test_ui_theme_load", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_profile_update", status: "PR #126", builds: "build_20250701 → build_20250702", details: "reports/pr_453_report.html" },
-                            { test: "test_signup_flow", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_password_reset", status: "PR #127", builds: "build_20250701 → build_20250702", details: "reports/pr_454_report.html" },
-                            { test: "test_email_verification", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_dashboard_load", status: "PR #128", builds: "build_20250701 → build_20250702", details: "reports/pr_455_report.html" },
-                            { test: "test_notification_popup", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_user_logout", status: "PR #129", builds: "build_20250701 → build_20250702", details: "reports/pr_456_report.html" },
-                            { test: "test_theme_switch", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_profile_picture_upload", status: "PR #130", builds: "build_20250701 → build_20250702", details: "reports/pr_457_report.html" },
-                            { test: "test_data_export", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_import_csv", status: "PR #131", builds: "build_20250701 → build_20250702", details: "reports/pr_458_report.html" },
-                            { test: "test_search_function", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_user_registration", status: "PR #132", builds: "build_20250701 → build_20250702", details: "reports/pr_459_report.html" },
-                            { test: "test_api_rate_limit", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_session_expiry", status: "PR #133", builds: "build_20250701 → build_20250702", details: "reports/pr_460_report.html" },
-                            { test: "test_multi_factor_auth", status: "Unable to uniquely identify library change", builds: "build_20250701 → build_20250702", details: null },
-                            { test: "test_user_preferences", status: "PR #134", builds: "build_20250701 → build_20250702", details: "reports/pr_461_report.html" },
-                            { test: "test_audit_log", status: "Rebase unavailable", builds: "build_20250701 → build_20250702", details: null }
+                            { test: "test_login_timeout", status: "PR #125", builds: "81234567 → 81234789", details: "reports/pr_452_report.html" },
+                            { test: "test_ui_theme_load", status: "Unable to uniquely identify library change", builds: "81234567 → 82345678", details: null },
+                            { test: "test_profile_update", status: "PR #126", builds: "81234567 → 81234789", details: "reports/pr_453_report.html" },
+                            { test: "test_signup_flow", status: "Rebase unavailable", builds: "82345678 → 83456789", details: null },
+                            { test: "test_password_reset", status: "PR #127", builds: "81234567 → 82345678", details: "reports/pr_454_report.html" },
+                            { test: "test_email_verification", status: "Unable to uniquely identify library change", builds: "83456789 → 84567890", details: null },
+                            { test: "test_dashboard_load", status: "PR #128", builds: "81234567 → 81234789", details: "reports/pr_455_report.html" },
+                            { test: "test_notification_popup", status: "Rebase unavailable", builds: "82345678 → 84567890", details: null },
+                            { test: "test_user_logout", status: "PR #129", builds: "81234567 → 82345678", details: "reports/pr_456_report.html" },
+                            { test: "test_theme_switch", status: "Unable to uniquely identify library change", builds: "83456789 → 85678901", details: null },
+                            { test: "test_profile_picture_upload", status: "PR #130", builds: "82345678 → 83456789", details: "reports/pr_457_report.html" },
+                            { test: "test_data_export", status: "Rebase unavailable", builds: "84567890 → 85678901", details: null },
+                            { test: "test_import_csv", status: "PR #131", builds: "81234567 → 83456789", details: "reports/pr_458_report.html" },
+                            { test: "test_search_function", status: "Unable to uniquely identify library change", builds: "83456789 → 84567890", details: null },
+                            { test: "test_user_registration", status: "PR #132", builds: "82345678 → 85678901", details: "reports/pr_459_report.html" },
+                            { test: "test_api_rate_limit", status: "Rebase unavailable", builds: "84567890 → 86789012", details: null },
+                            { test: "test_session_expiry", status: "PR #133", builds: "83456789 → 84567890", details: "reports/pr_460_report.html" },
+                            { test: "test_multi_factor_auth", status: "Unable to uniquely identify library change", builds: "85678901 → 86789012", details: null },
+                            { test: "test_user_preferences", status: "PR #134", builds: "84567890 → 86789012", details: "reports/pr_461_report.html" },
+                            { test: "test_audit_log", status: "Rebase unavailable", builds: "85678901 → 87890123", details: null }
                         ];
                         new Tabulator("#failing-tests-table", {
                             data: tableData,
@@ -199,7 +199,35 @@
                                         }
                                     }
                                 },
-                                { title: "Passing → Failing", field: "builds", headerFilter: true },
+                                { 
+                                    title: "Passing → Failing", 
+                                    field: "builds", 
+                                    headerFilter: true,
+                                    formatter: function(cell) {
+                                        var val = cell.getValue();
+                                        if(val && val.includes('→')) {
+                                            var builds = val.split(' → ');
+                                            var fromBuild = builds[0].trim();
+                                            var toBuild = builds[1].trim();
+                                            
+                                            // Generate consistent colors based on build names
+                                            function getBuildColor(buildName) {
+                                                var hash = 0;
+                                                for (var i = 0; i < buildName.length; i++) {
+                                                    hash = buildName.charCodeAt(i) + ((hash << 5) - hash);
+                                                }
+                                                var hue = Math.abs(hash % 360);
+                                                return `hsl(${hue}, 70%, 90%)`;
+                                            }
+                                            
+                                            var fromColor = getBuildColor(fromBuild);
+                                            var toColor = getBuildColor(toBuild);
+                                            
+                                            return `<span style='background-color: ${fromColor}; padding: 2px 4px; border-radius: 3px; margin-right: 4px;'>${fromBuild}</span>→<span style='background-color: ${toColor}; padding: 2px 4px; border-radius: 3px; margin-left: 4px;'>${toBuild}</span>`;
+                                        }
+                                        return val;
+                                    }
+                                },
                                 { title: "Details", field: "details", hozAlign: "center", formatter: function(cell) {
                                     var url = cell.getValue();
                                     if(url) {
