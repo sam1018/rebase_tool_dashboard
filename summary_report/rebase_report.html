@@ -308,6 +308,17 @@
             border-radius: var(--radius);
             border: 1px solid var(--border-color);
             background: var(--card-background);
+            min-width: 0; /* Allow flex shrinking */
+            overflow: hidden; /* Prevent content overflow */
+        }
+
+        .change-side .tabulator {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+        }
+
+        .change-side .tabulator-table {
+            min-width: 100% !important;
         }
 
         .change-side h4 {
@@ -637,12 +648,12 @@
             {
                 testName: "test_cleanup.py::test_inactive_user_removal",
                 tableName: "user_accounts",
-                rowData: { id: 1201, type: "Inactive User", reason: "Account closed" }
+                rowData: "id: 1201, type: Inactive User, reason: Account closed"
             },
             {
                 testName: "test_cleanup.py::test_test_data_removal",
                 tableName: "user_accounts",
-                rowData: { id: 1202, type: "Test Account", reason: "Test data cleanup" }
+                rowData: "id: 1202, type: Test Account, reason: Test data cleanup"
             }
         ];
         
@@ -953,10 +964,11 @@
                     pagination: "local",
                     paginationSize: 10,
                     paginationSizeSelector: [5, 10, 20],
+                    maxHeight: "300px",
                     columns: [
-                        {title: "Test Name", field: "testName", width: 300},
-                        {title: "Table", field: "tableName", width: 150},
-                        {title: "Row Data", field: "rowInfo"}
+                        {title: "Test Name", field: "testName", width: 250, minWidth: 200},
+                        {title: "Table", field: "tableName", width: 120, minWidth: 100, maxWidth: 150},
+                        {title: "Row Data", field: "rowInfo", minWidth: 200}
                     ]
                 });
             }
@@ -968,7 +980,7 @@
                 const deletedRowsData = deletedRows.map(row => ({
                     testName: row.testName,
                     tableName: row.tableName,
-                    rowInfo: Object.entries(row.rowData).map(([key, value]) => `${key}: ${value}`).join(' | ')
+                    rowInfo: row.rowData
                 }));
 
                 new Tabulator("#deletedRowsTable", {
@@ -977,10 +989,11 @@
                     pagination: "local",
                     paginationSize: 10,
                     paginationSizeSelector: [5, 10, 20],
+                    maxHeight: "300px",
                     columns: [
-                        {title: "Test Name", field: "testName", width: 300},
-                        {title: "Table", field: "tableName", width: 150},
-                        {title: "Row Data", field: "rowInfo"}
+                        {title: "Test Name", field: "testName", width: 250, minWidth: 200},
+                        {title: "Table", field: "tableName", width: 120, minWidth: 100, maxWidth: 150},
+                        {title: "Row Data", field: "rowInfo", minWidth: 200}
                     ]
                 });
             }
