@@ -682,6 +682,9 @@
                 after: { category: "Enhancement", severity: "Low", estimate: "1h" }
             }
         ];
+        
+        // Modified rows download link - set to empty string to hide download button
+        const modifiedRowsDownloadLink = "https://example.com/path/to/modified_rows_comparison.zip"; // Set to "" to hide download button
     </script>
 
     <div class="container">
@@ -758,12 +761,7 @@
                     </div>
                     <h4 class="modified-rows-header">Modified Rows</h4>
                     <div id="modifiedRowsTable">
-                        <div class="simple-download">
-                            <a href="#" class="download-link" onclick="downloadModifiedRowsCSV()" title="Download modified rows data as CSV">
-                                <span class="download-icon">📋</span>
-                                Download Modified Rows CSV
-                            </a>
-                        </div>
+                        <!-- Content will be populated by JavaScript based on modifiedRowsDownloadLink -->
                     </div>
                 </div>
             </div>
@@ -1022,6 +1020,21 @@
                     ]
                 });
             }
+
+            // Modified rows download section - only show if download link is provided
+            const modifiedRowsContainer = document.getElementById('modifiedRowsTable');
+            if (modifiedRowsDownloadLink && modifiedRowsDownloadLink.trim() !== "") {
+                modifiedRowsContainer.innerHTML = `
+                    <div class="simple-download">
+                        <a href="${modifiedRowsDownloadLink}" class="download-link" target="_blank" title="Download modified rows comparison ZIP file">
+                            <span class="download-icon">📦</span>
+                            Download Modified Rows ZIP
+                        </a>
+                    </div>
+                `;
+            } else {
+                modifiedRowsContainer.innerHTML = '<div class="empty-state">No modified rows.</div>';
+            }
         }
 
         function downloadNumericalChangesCSV() {
@@ -1040,35 +1053,6 @@
 
             const csvContent = [headers, ...csvData].join('\n');
             downloadFile('numerical_changes.csv', csvContent);
-        }
-
-        function downloadModifiedRowsCSV() {
-            if (rowChanges.length === 0) {
-                alert('No modified rows data available to download.');
-                return;
-            }
-
-            // Create a combined dataset with before and after data
-            const csvData = [];
-            const headers = ['Row ID', 'Field', 'Before', 'After'];
-            
-            rowChanges.forEach(row => {
-                Object.keys(row.before).forEach(field => {
-                    csvData.push([
-                        row.rowId,
-                        field,
-                        row.before[field],
-                        row.after[field]
-                    ]);
-                });
-            });
-
-            const csvContent = [
-                headers.map(h => `"${h}"`).join(','),
-                ...csvData.map(row => row.map(cell => `"${cell}"`).join(','))
-            ].join('\n');
-
-            downloadFile('modified_rows.csv', csvContent);
         }
 
         function formatColumnTitle(key) {
