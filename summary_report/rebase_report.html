@@ -132,6 +132,7 @@
 
         .section-content {
             padding: 2rem;
+            overflow-x: auto;
         }
 
         .table {
@@ -346,42 +347,73 @@
             font-style: italic;
         }
 
+        /* Tabulator Table Styling */
         .tabulator {
-            overflow-x: auto !important;
-            max-width: 100% !important;
+            border: none !important;
+            border-radius: var(--radius) !important;
+            box-shadow: var(--shadow) !important;
+            background: var(--card-background) !important;
+            overflow: hidden !important;
         }
 
-        .tabulator-table {
-            min-width: max-content !important;
+        .tabulator-header {
+            background-color: var(--background-color) !important;
+            border-bottom: 2px solid var(--primary-color) !important;
         }
 
-        .tabulator-tableHolder {
-            overflow-x: auto !important;
+        .tabulator-col {
+            background: transparent !important;
+            border-right: 1px solid var(--border-color) !important;
         }
 
-        /* Ensure table containers don't overflow */
-        .section-content {
-            overflow-x: auto;
+        .tabulator-col:last-child {
+            border-right: none !important;
         }
 
-        /* Enhanced row height and cell padding for better vertical space utilization */
-        .tabulator-cell {
-            padding: 0.75rem 1rem !important;
-            vertical-align: middle !important;
-            line-height: 1.5 !important;
-        }
-
-        .tabulator-row {
-            min-height: 48px !important;
-        }
-
-        /* Specific styling for numerical changes table */
-        #numericalChangesTable .tabulator-cell {
+        .tabulator-col-title {
+            font-weight: 600 !important;
+            color: var(--text-primary) !important;
+            font-size: 0.875rem !important;
             padding: 1rem !important;
         }
 
-        #numericalChangesTable .tabulator-row {
-            min-height: 56px !important;
+        .tabulator-row {
+            background: var(--card-background) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .tabulator-row:hover {
+            background-color: var(--background-color) !important;
+        }
+
+        .tabulator-row-even {
+            background: var(--card-background) !important;
+        }
+
+        .tabulator-row-odd {
+            background: #fafbfc !important;
+        }
+
+        .tabulator-cell {
+            border-right: 1px solid var(--border-color) !important;
+            padding: 0.75rem !important;
+            vertical-align: middle !important;
+            font-size: 0.875rem !important;
+        }
+
+        .tabulator-cell:last-child {
+            border-right: none !important;
+        }
+
+        .tabulator-footer {
+            background-color: var(--background-color) !important;
+            border-top: 1px solid var(--border-color) !important;
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .modified-rows-header {
