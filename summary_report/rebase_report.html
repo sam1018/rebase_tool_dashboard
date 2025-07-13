@@ -71,6 +71,19 @@
             margin-bottom: 1rem;
         }
 
+        .build-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .build-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            text-decoration: underline;
+        }
+
         .build-details {
             display: grid;
             grid-template-columns: 1fr auto 1fr;
@@ -758,8 +771,9 @@
         });
 
         function initializePage() {
-            // Populate build transition
-            document.getElementById('buildTransition').textContent = `${fromBuildId} → ${toBuildId}`;
+            // Populate build transition with clickable links
+            const buildTransitionElement = document.getElementById('buildTransition');
+            buildTransitionElement.innerHTML = `<a href="#" class="build-link" onclick="openBuildDetails('${fromBuildId}')">${fromBuildId}</a> → <a href="#" class="build-link" onclick="openBuildDetails('${toBuildId}')">${toBuildId}</a>`;
 
             // Populate library changes
             populateLibraryChanges();
@@ -772,6 +786,20 @@
             populateNonNumericalChanges();
             populateColumnChanges();
             populateRowChanges();
+        }
+
+        function openBuildDetails(buildId) {
+            // Construct TeamCity URL based on build ID
+            // You can customize this URL pattern to match your TeamCity setup
+            const teamcityBaseUrl = "https://teamcity.your-domain.com"; // Replace with your TeamCity URL
+            const teamcityUrl = `${teamcityBaseUrl}/viewLog.html?buildId=${buildId}`;
+            
+            // Open TeamCity build details in a new tab
+            window.open(teamcityUrl, '_blank');
+            
+            // Alternative patterns you might need:
+            // For build type ID: `${teamcityBaseUrl}/buildConfiguration/${buildTypeId}/${buildId}`
+            // For build number: `${teamcityBaseUrl}/viewLog.html?buildNumber=${buildId}&buildTypeId=YourBuildType`
         }
 
         function populateLibraryChanges() {
