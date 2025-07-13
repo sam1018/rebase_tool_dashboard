@@ -346,125 +346,42 @@
             font-style: italic;
         }
 
+        .tabulator {
+            overflow-x: auto !important;
+            max-width: 100% !important;
+        }
+
         .tabulator-table {
-            border: none;
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-header {
-            background: var(--card-background) !important;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .tabulator-col {
-            background: var(--card-background) !important;
-            border-right: 1px solid var(--border-color);
-        }
-
-        .tabulator-col-title {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .tabulator-row {
-            border-bottom: 1px solid var(--border-color);
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-row:hover {
-            background-color: #f8fafc !important;
-        }
-
-        .tabulator-row-even {
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-row-odd {
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-cell {
-            border-right: 1px solid var(--border-color);
-            background: transparent !important;
-        }
-
-        .tabulator-footer {
-            background: var(--card-background) !important;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .tabulator-pagination {
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-paginator {
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-page {
-            background: var(--card-background) !important;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .tabulator-page:hover {
-            background: var(--background-color) !important;
-        }
-
-        .tabulator-page.active {
-            background: var(--primary-color) !important;
-            color: white;
-        }
-
-        .tabulator-pages {
-            background: var(--card-background) !important;
-        }
-
-        .tabulator-page-size {
-            background: var(--card-background) !important;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-        }
-
-        .tabulator-page-counter {
-            background: var(--card-background) !important;
-            color: var(--text-primary);
+            min-width: max-content !important;
         }
 
         .tabulator-tableHolder {
-            background: var(--card-background) !important;
+            overflow-x: auto !important;
         }
 
-        .tabulator-tableholder {
-            background: var(--card-background) !important;
+        /* Ensure table containers don't overflow */
+        .section-content {
+            overflow-x: auto;
         }
 
-        /* Override any remaining grey backgrounds with more specific selectors */
-        .tabulator .tabulator-footer,
-        .tabulator .tabulator-pagination,
-        .tabulator .tabulator-paginator,
-        .tabulator .tabulator-pages,
-        .tabulator .tabulator-tableHolder,
-        .tabulator .tabulator-tableholder {
-            background: var(--card-background) !important;
+        /* Enhanced row height and cell padding for better vertical space utilization */
+        .tabulator-cell {
+            padding: 0.75rem 1rem !important;
+            vertical-align: middle !important;
+            line-height: 1.5 !important;
         }
 
-        /* Ensure table body and empty areas are white */
-        .tabulator-table .tabulator-tableHolder,
-        .tabulator-table .tabulator-tableholder,
-        .tabulator-table tbody,
-        .tabulator-table .tabulator-placeholder {
-            background: var(--card-background) !important;
+        .tabulator-row {
+            min-height: 48px !important;
         }
 
-        /* Remove any default grey styling */
-        .tabulator-table * {
-            background-color: inherit;
+        /* Specific styling for numerical changes table */
+        #numericalChangesTable .tabulator-cell {
+            padding: 1rem !important;
         }
 
-        .tabulator-table .tabulator-cell,
-        .tabulator-table .tabulator-row {
-            background: var(--card-background) !important;
+        #numericalChangesTable .tabulator-row {
+            min-height: 56px !important;
         }
 
         .modified-rows-header {
@@ -472,6 +389,46 @@
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--text-primary);
+        }
+
+        /* Download section styling */
+        .download-section {
+            text-align: center;
+            padding: 2rem;
+            background: var(--background-color);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius);
+            margin: 1rem 0;
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: background-color 0.2s;
+            margin: 0.5rem 0;
+        }
+
+        .download-link:hover {
+            background: #1d4ed8;
+            text-decoration: none;
+        }
+
+        .download-icon {
+            font-size: 1.2rem;
+        }
+
+        .download-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            line-height: 1.5;
         }
 
         @media (max-width: 768px) {
@@ -762,6 +719,17 @@
                 </div>
             </div>
         </div>
+
+        <!-- Download Section -->
+        <div class="download-section">
+            <a href="#" class="download-link">
+                <span class="download-icon">⬇️</span>
+                Download Full Report
+            </a>
+            <div class="download-description">
+                Click the button above to download the complete rebase report, including all changes, diffs, and affected tests.
+            </div>
+        </div>
     </div>
 
     <script>
@@ -902,21 +870,21 @@
 
             const getColumnMinWidth = (key) => {
                 const widthMap = {
-                    'testName': 200,
-                    'tableName': 100,
-                    'row': 100,
-                    'previousValue': 100,
-                    'newValue': 100,
+                    'testName': 250,
+                    'tableName': 120,
+                    'row': 120,
+                    'previousValue': 120,
+                    'newValue': 120,
                     'absoluteDiff': 100,
-                    'relativeDiff': 120
+                    'relativeDiff': 100
                 };
                 return widthMap[key] || 100;
             };
 
             new Tabulator("#numericalChangesTable", {
                 data: numericalChanges,
-                layout: "fitDataTable",
-                responsiveLayout: "collapse",
+                layout: "fitColumns",
+                height: "400px",
                 pagination: "local",
                 paginationSize: 20,
                 paginationSizeSelector: [10, 20, 50, 100],
@@ -1031,39 +999,72 @@
                 });
             }
 
-            // Modified rows with Tabulator
+            // Modified rows download section
             if (rowChanges.length === 0) {
                 document.getElementById('modifiedRowsTable').innerHTML = '<div class="empty-state">No modified rows</div>';
                 return;
             }
 
-            const modifiedRowsData = rowChanges.map(row => {
-                const beforeData = Object.entries(row.before).map(([key, value]) => `${key}: ${value}`).join(' | ');
-                const afterData = Object.entries(row.after).map(([key, value]) => `${key}: ${value}`).join(' | ');
-                
-                return {
-                    rowId: row.rowId,
-                    before: beforeData,
-                    after: afterData
-                };
+            // Generate download content for modified rows
+            const modifiedRowsCount = rowChanges.length;
+            const downloadSection = `
+                <div class="download-section">
+                    <h4 style="margin-bottom: 1rem; color: var(--text-primary);">Modified Rows Comparison Data</h4>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+                        Found <strong>${modifiedRowsCount}</strong> modified row${modifiedRowsCount !== 1 ? 's' : ''} that require detailed comparison.
+                    </p>
+                    <a href="#" class="download-link" onclick="downloadModifiedRowsZip()" title="Download comparison data as ZIP file">
+                        <span class="download-icon">📦</span>
+                        Download Comparison Data (ZIP)
+                    </a>
+                    <div class="download-description">
+                        <p><strong>Instructions:</strong></p>
+                        <p>1. Download the ZIP file containing before/after data files</p>
+                        <p>2. Extract the ZIP file to a local directory</p>
+                        <p>3. Use Beyond Compare or similar diff tool to compare the files</p>
+                        <p>4. Files are formatted as CSV for easy comparison</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('modifiedRowsTable').innerHTML = downloadSection;
+        }
+
+        function downloadModifiedRowsZip() {
+            // Generate CSV content for before and after data
+            const beforeData = rowChanges.map(row => {
+                const rowData = { rowId: row.rowId, ...row.before };
+                return Object.entries(rowData).map(([key, value]) => `"${value}"`).join(',');
             });
 
-            new Tabulator("#modifiedRowsTable", {
-                data: modifiedRowsData,
-                layout: "fitColumns",
-                pagination: "local",
-                paginationSize: 20,
-                paginationSizeSelector: [10, 20, 50, 100],
-                columns: [
-                    {title: "Row ID", field: "rowId", width: 100},
-                    {title: "Before", field: "before", formatter: function(cell) {
-                        return `<div style="background: var(--card-background); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius);">${cell.getValue()}</div>`;
-                    }},
-                    {title: "After", field: "after", formatter: function(cell) {
-                        return `<div style="background: var(--card-background); border: 1px solid var(--border-color); padding: 0.75rem; border-radius: var(--radius);">${cell.getValue()}</div>`;
-                    }}
-                ]
+            const afterData = rowChanges.map(row => {
+                const rowData = { rowId: row.rowId, ...row.after };
+                return Object.entries(rowData).map(([key, value]) => `"${value}"`).join(',');
             });
+
+            // Get headers from the first row
+            const headers = rowChanges.length > 0 ? 
+                ['rowId', ...Object.keys(rowChanges[0].before)].map(key => `"${key}"`).join(',') : '';
+
+            const beforeCSV = [headers, ...beforeData].join('\n');
+            const afterCSV = [headers, ...afterData].join('\n');
+
+            // Create and download files
+            downloadFile('modified_rows_before.csv', beforeCSV);
+            downloadFile('modified_rows_after.csv', afterCSV);
+            
+            // Show user notification
+            alert(`Downloaded 2 CSV files:\n- modified_rows_before.csv\n- modified_rows_after.csv\n\nUse Beyond Compare or similar tool to compare these files.`);
+        }
+
+        function downloadFile(filename, content) {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(content));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
         }
     </script>
 </body>
