@@ -624,12 +624,12 @@
             {
                 testName: "test_premium_users.py::test_new_premium_account",
                 tableName: "user_accounts",
-                rowData: { id: 1548, type: "Premium User", status: "Active" }
+                rowData: "id: 1548, type: Premium User, status: Active"
             },
             {
                 testName: "test_trial_users.py::test_new_trial_signup",
                 tableName: "user_accounts",
-                rowData: { id: 1549, type: "Trial User", status: "Pending" }
+                rowData: "id: 1549, type: Trial User, status: Pending"
             }
         ];
         
@@ -944,7 +944,7 @@
                 const newRowsData = newRows.map(row => ({
                     testName: row.testName,
                     tableName: row.tableName,
-                    rowInfo: Object.entries(row.rowData).map(([key, value]) => `${key}: ${value}`).join(' | ')
+                    rowInfo: row.rowData
                 }));
 
                 new Tabulator("#newRowsTable", {
