@@ -803,7 +803,17 @@
                     {title: "Library", field: "library"},
                     {title: "Changelist", field: "changelist"},
                     {title: "Author", field: "author"},
-                    {title: "JIRA", field: "jira"}
+                    {
+                        title: "JIRA", 
+                        field: "jira",
+                        formatter: function(cell, formatterParams, onRendered) {
+                            const value = cell.getValue();
+                            if (value) {
+                                return `<a href="https://jira.yourcompany.com/browse/${value}" target="_blank" style="color: var(--primary-color); text-decoration: none;">${value}</a>`;
+                            }
+                            return value;
+                        }
+                    }
                 ]
             });
         }
