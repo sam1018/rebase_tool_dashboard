@@ -538,7 +538,7 @@
                 library: "numpy",
                 changelist: "CL-12345",
                 author: "john.doe",
-                jira: "PROJ-1234"
+                jira: ["PROJ-1234", "PROJ-1240"]
             },
             {
                 library: "pandas",
@@ -550,7 +550,7 @@
                 library: "matplotlib",
                 changelist: "CL-12347",
                 author: "bob.wilson",
-                jira: "PROJ-1236"
+                jira: ["PROJ-1236", "PROJ-1237", "PROJ-1238"]
             }
         ];
         
@@ -808,9 +808,20 @@
                         field: "jira",
                         formatter: function(cell, formatterParams, onRendered) {
                             const value = cell.getValue();
-                            if (value) {
+                            if (!value) return '';
+                            
+                            // Handle single JIRA ticket (string)
+                            if (typeof value === 'string') {
                                 return `<a href="https://jira.yourcompany.com/browse/${value}" target="_blank" style="color: var(--primary-color); text-decoration: none;">${value}</a>`;
                             }
+                            
+                            // Handle multiple JIRA tickets (array)
+                            if (Array.isArray(value)) {
+                                return value.map(jira => 
+                                    `<a href="https://jira.yourcompany.com/browse/${jira}" target="_blank" style="color: var(--primary-color); text-decoration: none; margin-right: 8px;">${jira}</a>`
+                                ).join('');
+                            }
+                            
                             return value;
                         }
                     }
