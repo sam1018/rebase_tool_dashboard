@@ -14,6 +14,8 @@
     <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator.min.css" rel="stylesheet">
     <!-- Tabulator Bootstrap 5 Theme CSS -->
     <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">
+    <!-- Tabulator JS -->
+    <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
     <style>
     /* Make Tabulator pagination/footer match Bootstrap card */
     .tabulator .tabulator-footer {
@@ -65,14 +67,18 @@
             <div class="container-fluid">
                 <a class="navbar-brand fw-bold" href="#">rebase_tool</a>
                 <div class="d-none d-md-block ms-4 text-muted small">
-                    Build #47 &nbsp; Apr 24, 2024, 07:15 AM &nbsp; Commit: <span class="badge bg-secondary">a1b2c3d4</span>
+                    <a href="#" id="beta-link" class="text-decoration-none text-muted">
+                        <span id="beta-version">E2E Beta 910100</span>
+                    </a>
+                    &nbsp; <span id="beta-datetime">Apr 24, 2024, 07:15 AM</span> &nbsp; 
+                    Commit: <span class="badge bg-secondary">a1b2c3d4</span>
                 </div>
                 <ul class="nav nav-tabs ms-auto" id="dashboardTabs" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="tab-current" data-bs-toggle="tab" data-bs-target="#current-build" type="button" role="tab">Current Build</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="tab-history" data-bs-toggle="tab" data-bs-target="#historical-trends" type="button" role="tab">Historical Trends</button>
+                        <button class="nav-link" id="tab-history" data-bs-toggle="tab" data-bs-target="#historical-trends" type="button" role="tab">Numeric Rebase History</button>
                     </li>
                 </ul>
             </div>
@@ -120,7 +126,6 @@
                             <div id="failing-tests-table"></div>
                         </div>
                     </div>
-                    <script src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
                     <script>
                     // Test status variables (can be updated externally)
                     var testStatus = {
@@ -130,12 +135,24 @@
                         rebaseUnavailable: 10
                     };
 
+                    // Beta build information variables (can be updated externally)
+                    var betaInfo = {
+                        version: 'E2E Beta 910100',
+                        datetime: 'Apr 24, 2024, 07:15 AM',
+                        link: '#'
+                    };
+
                     document.addEventListener('DOMContentLoaded', function() {
                         // Update test status cards
                         document.getElementById('failing-tests-count').textContent = testStatus.failingTests;
                         document.getElementById('uniquely-identified-count').textContent = testStatus.uniquelyIdentified;
                         document.getElementById('not-uniquely-identified-count').textContent = testStatus.notUniquelyIdentified;
                         document.getElementById('rebase-unavailable-count').textContent = testStatus.rebaseUnavailable;
+
+                        // Update beta information
+                        document.getElementById('beta-version').textContent = betaInfo.version;
+                        document.getElementById('beta-datetime').textContent = betaInfo.datetime;
+                        document.getElementById('beta-link').href = betaInfo.link;
 
                         var tableData = [
                             { test: "test_login_timeout", status: "PR #125", builds: "81234567 → 81234789", details: "reports/pr_452_report.html" },
@@ -241,50 +258,10 @@
                     </script>
                 </div>
                 <div class="tab-pane fade" id="historical-trends" role="tabpanel">
-                    <div class="row mb-4">
-                        <div class="col-lg-8">
-                            <div class="card">
-                                <div class="card-header fw-bold">Failed Tests Over Last 10 Builds</div>
-                                <div class="card-body">
-                                    <canvas id="failedTestsChart" height="120"></canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div>Total PRs Created: <span class="fw-bold">47</span></div>
-                                    <div>PRs Merged: <span class="fw-bold text-success">41</span></div>
-                                    <div>Remaining: <span class="fw-bold text-warning">6</span></div>
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header fw-bold">Most Frequently Failing Tests</div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered align-middle mb-0">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Test Name</th>
-                                                <th>Failures</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>test_login_timeout</td>
-                                                <td>7</td>
-                                            </tr>
-                                            <tr>
-                                                <td>test_ui_theme_load</td>
-                                                <td>5</td>
-                                            </tr>
-                                            <tr>
-                                                <td>test_profile_update</td>
-                                                <td>4</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    <div class="card mb-4">
+                        <div class="card-header fw-bold">Numeric Rebase History</div>
+                        <div class="table-responsive">
+                            <div id="numeric-history-table"></div>
                         </div>
                     </div>
                 </div>
@@ -300,6 +277,259 @@
         tooltipTriggerList.forEach(function (tooltipTriggerEl) {
             new bootstrap.Tooltip(tooltipTriggerEl);
         });
+
+        // Global variable to track numeric history table initialization
+        let numericHistoryTable = null;
+
+        // Function to initialize numeric history table
+        function initializeNumericHistoryTable() {
+            // Check if table already exists
+            if (numericHistoryTable) {
+                return;
+            }
+
+            // Check if Tabulator is loaded
+            if (typeof Tabulator === 'undefined') {
+                console.error('Tabulator library not loaded');
+                return;
+            }
+
+            const numericHistoryData = [
+                { 
+                    commit: "a1b2c3d4", 
+                    commitTime: "2024-04-24 07:15:22", 
+                    test: "test_numerical_precision", 
+                    testCategories: "Math, Precision", 
+                    release: "v2.1.0", 
+                    maxAbsDiff: 0.0001, 
+                    maxRelDiff: 0.05, 
+                    lengthMismatch: 0 
+                },
+                { 
+                    commit: "b2c3d4e5", 
+                    commitTime: "2024-04-23 14:30:15", 
+                    test: "test_array_operations", 
+                    testCategories: "Arrays, Performance", 
+                    release: "v2.0.9", 
+                    maxAbsDiff: 0.002, 
+                    maxRelDiff: 0.12, 
+                    lengthMismatch: 2 
+                },
+                { 
+                    commit: "c3d4e5f6", 
+                    commitTime: "2024-04-22 09:45:33", 
+                    test: "test_matrix_multiplication", 
+                    testCategories: "Math, Linear Algebra", 
+                    release: "v2.0.8", 
+                    maxAbsDiff: 0.0005, 
+                    maxRelDiff: 0.03, 
+                    lengthMismatch: 0 
+                },
+                { 
+                    commit: "d4e5f6g7", 
+                    commitTime: "2024-04-21 16:20:41", 
+                    test: "test_statistical_functions", 
+                    testCategories: "Statistics, Math", 
+                    release: "v2.0.7", 
+                    maxAbsDiff: 0.01, 
+                    maxRelDiff: 0.25, 
+                    lengthMismatch: 1 
+                },
+                { 
+                    commit: "e5f6g7h8", 
+                    commitTime: "2024-04-20 11:55:18", 
+                    test: "test_floating_point_calc", 
+                    testCategories: "Math, Precision", 
+                    release: "v2.0.6", 
+                    maxAbsDiff: 0.00001, 
+                    maxRelDiff: 0.01, 
+                    lengthMismatch: 0 
+                },
+                { 
+                    commit: "f6g7h8i9", 
+                    commitTime: "2024-04-19 13:12:07", 
+                    test: "test_vector_operations", 
+                    testCategories: "Math, Vectors", 
+                    release: "v2.0.5", 
+                    maxAbsDiff: 0.003, 
+                    maxRelDiff: 0.15, 
+                    lengthMismatch: 3 
+                },
+                { 
+                    commit: "g7h8i9j0", 
+                    commitTime: "2024-04-18 08:33:52", 
+                    test: "test_regression_analysis", 
+                    testCategories: "Statistics, Analysis", 
+                    release: "v2.0.4", 
+                    maxAbsDiff: 0.02, 
+                    maxRelDiff: 0.18, 
+                    lengthMismatch: 0 
+                },
+                { 
+                    commit: "h8i9j0k1", 
+                    commitTime: "2024-04-17 15:47:29", 
+                    test: "test_numerical_integration", 
+                    testCategories: "Math, Calculus", 
+                    release: "v2.0.3", 
+                    maxAbsDiff: 0.0008, 
+                    maxRelDiff: 0.04, 
+                    lengthMismatch: 0 
+                },
+                { 
+                    commit: "i9j0k1l2", 
+                    commitTime: "2024-04-16 10:22:14", 
+                    test: "test_optimization_algo", 
+                    testCategories: "Algorithms, Optimization", 
+                    release: "v2.0.2", 
+                    maxAbsDiff: 0.05, 
+                    maxRelDiff: 0.30, 
+                    lengthMismatch: 5 
+                },
+                { 
+                    commit: "j0k1l2m3", 
+                    commitTime: "2024-04-15 12:08:36", 
+                    test: "test_fourier_transform", 
+                    testCategories: "Math, Signal Processing", 
+                    release: "v2.0.1", 
+                    maxAbsDiff: 0.001, 
+                    maxRelDiff: 0.08, 
+                    lengthMismatch: 1 
+                }
+            ];
+
+            try {
+                numericHistoryTable = new Tabulator("#numeric-history-table", {
+                    data: numericHistoryData,
+                    layout: "fitColumns",
+                    pagination: "local",
+                    paginationSize: 15,
+                    columns: [
+                        { 
+                            title: "Commit", 
+                            field: "commit", 
+                            headerFilter: true, 
+                            width: "10%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                return `<code class="text-primary">${val}</code>`;
+                            }
+                        },
+                        { 
+                            title: "Commit Time", 
+                            field: "commitTime", 
+                            headerFilter: true, 
+                            width: "15%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                const date = new Date(val);
+                                return date.toLocaleString();
+                            }
+                        },
+                        { 
+                            title: "Test", 
+                            field: "test", 
+                            headerFilter: true, 
+                            width: "20%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                return `<code>${val}</code>`;
+                            }
+                        },
+                        { 
+                            title: "Test Categories", 
+                            field: "testCategories", 
+                            headerFilter: "list",
+                            headerFilterParams: {
+                                values: {
+                                    "": "All",
+                                    "Math": "Math",
+                                    "Statistics": "Statistics",
+                                    "Performance": "Performance",
+                                    "Arrays": "Arrays",
+                                    "Algorithms": "Algorithms"
+                                }
+                            },
+                            width: "15%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                const categories = val.split(', ');
+                                return categories.map(cat => `<span class="badge bg-light text-dark me-1">${cat}</span>`).join('');
+                            }
+                        },
+                        { 
+                            title: "Release", 
+                            field: "release", 
+                            headerFilter: "list",
+                            headerFilterParams: {
+                                values: {
+                                    "": "All",
+                                    "v2.1.0": "v2.1.0",
+                                    "v2.0.9": "v2.0.9",
+                                    "v2.0.8": "v2.0.8",
+                                    "v2.0.7": "v2.0.7"
+                                }
+                            },
+                            width: "10%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                return `<span class="badge bg-info text-dark">${val}</span>`;
+                            }
+                        },
+                        { 
+                            title: "Max Abs Diff", 
+                            field: "maxAbsDiff", 
+                            headerFilter: true, 
+                            width: "10%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                const color = val > 0.01 ? 'text-danger' : val > 0.001 ? 'text-warning' : 'text-success';
+                                return `<span class="${color} fw-bold">${val.toFixed(6)}</span>`;
+                            },
+                            sorter: "number"
+                        },
+                        { 
+                            title: "Max Rel Diff", 
+                            field: "maxRelDiff", 
+                            headerFilter: true, 
+                            width: "10%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                const color = val > 0.2 ? 'text-danger' : val > 0.1 ? 'text-warning' : 'text-success';
+                                return `<span class="${color} fw-bold">${(val * 100).toFixed(2)}%</span>`;
+                            },
+                            sorter: "number"
+                        },
+                        { 
+                            title: "Length Mismatch", 
+                            field: "lengthMismatch", 
+                            headerFilter: true, 
+                            width: "10%",
+                            formatter: function(cell) {
+                                const val = cell.getValue();
+                                const color = val > 0 ? 'text-danger' : 'text-success';
+                                return `<span class="${color} fw-bold">${val}</span>`;
+                            },
+                            sorter: "number"
+                        }
+                    ],
+                    height: "600px",
+                    responsiveLayout: true,
+                    movableColumns: true,
+                    tooltips: true,
+                });
+            } catch (error) {
+                console.error('Error initializing Tabulator:', error);
+            }
+        }
+
+        // Add event listener for the history tab
+        const historyTab = document.getElementById('tab-history');
+        if (historyTab) {
+            historyTab.addEventListener('shown.bs.tab', function() {
+                // Use a longer timeout to ensure DOM is ready
+                setTimeout(initializeNumericHistoryTable, 200);
+            });
+        }
     });
     </script>
 </body>
