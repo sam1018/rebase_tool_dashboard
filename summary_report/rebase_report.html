@@ -555,10 +555,22 @@
         ];
         
         const failedTests = [
-            "test_data_validation.py::test_numeric_ranges",
-            "test_integration.py::test_api_response_format",
-            "test_performance.py::test_query_execution_time",
-            "test_regression.py::test_baseline_comparison"
+            {
+                test: "test_data_validation.py::test_numeric_ranges",
+                rebaseAvailable: true
+            },
+            {
+                test: "test_integration.py::test_api_response_format",
+                rebaseAvailable: false
+            },
+            {
+                test: "test_performance.py::test_query_execution_time",
+                rebaseAvailable: true
+            },
+            {
+                test: "test_regression.py::test_baseline_comparison",
+                rebaseAvailable: true
+            }
         ];
         
         const numericalChanges = [
@@ -835,9 +847,10 @@
                 return;
             }
 
-            const testData = failedTests.map((test, index) => ({
+            const testData = failedTests.map((testItem, index) => ({
                 id: index + 1,
-                test: test
+                test: testItem.test || testItem, // Handle both old string format and new object format
+                rebaseAvailable: testItem.rebaseAvailable !== undefined ? testItem.rebaseAvailable : null
             }));
 
             new Tabulator("#failedTestsTable", {
@@ -848,7 +861,22 @@
                 paginationSizeSelector: [10, 20, 50, 100],
                 columns: [
                     {title: "#", field: "id", width: 60},
-                    {title: "Failed Test", field: "test"}
+                    {title: "Failed Test", field: "test"},
+                    {
+                        title: "Rebase Available",
+                        field: "rebaseAvailable",
+                        width: 160,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            const value = cell.getValue();
+                            if (value === true) {
+                                return '<span style="color: var(--success-color); font-weight: 600;">✓ Yes</span>';
+                            } else if (value === false) {
+                                return '<span style="color: var(--error-color); font-weight: 600;">✗ No</span>';
+                            } else {
+                                return '<span style="color: var(--text-muted);">-</span>';
+                            }
+                        }
+                    }
                 ]
             });
         }
