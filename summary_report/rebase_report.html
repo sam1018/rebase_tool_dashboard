@@ -882,9 +882,20 @@
         }
 
         function populateNumericalChanges() {
+            const downloadButton = document.querySelector('.download-center');
+            
             if (numericalChanges.length === 0) {
                 document.getElementById('numericalChangesTable').innerHTML = '<div class="empty-state">No numerical changes detected</div>';
+                // Hide the download button when there's no data
+                if (downloadButton) {
+                    downloadButton.style.display = 'none';
+                }
                 return;
+            }
+
+            // Show the download button when there's data
+            if (downloadButton) {
+                downloadButton.style.display = 'block';
             }
 
             // Generate columns dynamically based on the data structure
