@@ -669,6 +669,25 @@
             }
         ];
         
+        const modifiedRows = [
+            {
+                testName: "test_user_profiles.py::test_profile_update",
+                tableName: "user_profiles"
+            },
+            {
+                testName: "test_order_management.py::test_order_status_change",
+                tableName: "orders"
+            },
+            {
+                testName: "test_inventory.py::test_stock_level_adjustment",
+                tableName: "inventory"
+            },
+            {
+                testName: "test_payment_processing.py::test_payment_status_update",
+                tableName: "payments"
+            }
+        ];
+        
         // Modified rows download link - set to empty string to hide download button
         const modifiedRowsDownloadLink = "https://example.com/path/to/modified_rows_comparison.zip"; // Set to "" to hide download button
         // </generated_data>
@@ -748,7 +767,10 @@
                     </div>
                     <h4 class="modified-rows-header">Modified Rows</h4>
                     <div id="modifiedRowsTable">
-                        <!-- Content will be populated by JavaScript based on modifiedRowsDownloadLink -->
+                        <!-- Table will be populated by JavaScript -->
+                    </div>
+                    <div id="modifiedRowsDownload">
+                        <!-- Download button will be populated by JavaScript -->
                     </div>
                 </div>
             </div>
@@ -1058,19 +1080,38 @@
                 });
             }
 
-            // Modified rows download section - only show if download link is provided
-            const modifiedRowsContainer = document.getElementById('modifiedRowsTable');
-            if (modifiedRowsDownloadLink && modifiedRowsDownloadLink.trim() !== "") {
-                modifiedRowsContainer.innerHTML = `
-                    <div class="simple-download">
-                        <a href="${modifiedRowsDownloadLink}" class="download-link" target="_blank" title="Download modified rows comparison ZIP file">
-                            <span class="download-icon">📦</span>
-                            Download Modified Rows ZIP
-                        </a>
-                    </div>
-                `;
+            // Modified rows table
+            if (modifiedRows.length === 0) {
+                document.getElementById('modifiedRowsTable').innerHTML = '<div class="empty-state">No modified rows</div>';
+                document.getElementById('modifiedRowsDownload').innerHTML = '';
             } else {
-                modifiedRowsContainer.innerHTML = '<div class="empty-state">No modified rows.</div>';
+                // Create the table
+                new Tabulator("#modifiedRowsTable", {
+                    data: modifiedRows,
+                    layout: "fitColumns",
+                    pagination: "local",
+                    paginationSize: 10,
+                    paginationSizeSelector: [5, 10, 20],
+                    maxHeight: "300px",
+                    columns: [
+                        {title: "Test Name", field: "testName", width: 400, minWidth: 300},
+                        {title: "Table", field: "tableName", width: 200, minWidth: 150}
+                    ]
+                });
+
+                // Add download button in separate container if download link is provided
+                if (modifiedRowsDownloadLink && modifiedRowsDownloadLink.trim() !== "") {
+                    document.getElementById('modifiedRowsDownload').innerHTML = `
+                        <div class="simple-download">
+                            <a href="${modifiedRowsDownloadLink}" class="download-link" target="_blank" title="Download modified rows comparison ZIP file">
+                                <span class="download-icon">📦</span>
+                                Download Modified Rows ZIP
+                            </a>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('modifiedRowsDownload').innerHTML = '';
+                }
             }
         }
 
