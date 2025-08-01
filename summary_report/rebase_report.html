@@ -557,19 +557,23 @@
         const failedTests = [
             {
                 test: "test_data_validation.py::test_numeric_ranges",
-                rebaseAvailable: true
+                rebaseAvailable: true,
+                comparisonAvailable: true
             },
             {
                 test: "test_integration.py::test_api_response_format",
-                rebaseAvailable: false
+                rebaseAvailable: false,
+                comparisonAvailable: false
             },
             {
                 test: "test_performance.py::test_query_execution_time",
-                rebaseAvailable: true
+                rebaseAvailable: true,
+                comparisonAvailable: true
             },
             {
                 test: "test_regression.py::test_baseline_comparison",
-                rebaseAvailable: true
+                rebaseAvailable: true,
+                comparisonAvailable: false
             }
         ];
         
@@ -872,7 +876,8 @@
             const testData = failedTests.map((testItem, index) => ({
                 id: index + 1,
                 test: testItem.test || testItem, // Handle both old string format and new object format
-                rebaseAvailable: testItem.rebaseAvailable !== undefined ? testItem.rebaseAvailable : null
+                rebaseAvailable: testItem.rebaseAvailable !== undefined ? testItem.rebaseAvailable : null,
+                comparisonAvailable: testItem.comparisonAvailable !== undefined ? testItem.comparisonAvailable : null
             }));
 
             new Tabulator("#failedTestsTable", {
@@ -887,6 +892,21 @@
                     {
                         title: "Rebase Available",
                         field: "rebaseAvailable",
+                        width: 160,
+                        formatter: function(cell, formatterParams, onRendered) {
+                            const value = cell.getValue();
+                            if (value === true) {
+                                return '<span style="color: var(--success-color); font-weight: 600;">✓ Yes</span>';
+                            } else if (value === false) {
+                                return '<span style="color: var(--error-color); font-weight: 600;">✗ No</span>';
+                            } else {
+                                return '<span style="color: var(--text-muted);">-</span>';
+                            }
+                        }
+                    },
+                    {
+                        title: "Comparison Available",
+                        field: "comparisonAvailable",
                         width: 160,
                         formatter: function(cell, formatterParams, onRendered) {
                             const value = cell.getValue();
