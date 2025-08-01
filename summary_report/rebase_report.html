@@ -759,22 +759,13 @@
                 <!-- Row Changes -->
                 <div class="section-subsection">
                     <h3 class="subsection-title">Row Changes</h3>
-                    <div class="change-before-after">
-                        <div class="change-side after">
-                            <h4>New Rows</h4>
-                            <div id="newRowsTable"></div>
-                        </div>
-                        <div class="change-side before">
-                            <h4>Deleted Rows</h4>
-                            <div id="deletedRowsTable"></div>
-                        </div>
+                    <div class="section-subsection">
+                        <h4>New Rows</h4>
+                        <div id="newRowsTable"></div>
                     </div>
-                    <h4 class="modified-rows-header">Modified Rows</h4>
-                    <div id="modifiedRowsTable">
-                        <!-- Table will be populated by JavaScript -->
-                    </div>
-                    <div id="modifiedRowsDownload">
-                        <!-- Download button will be populated by JavaScript -->
+                    <div class="section-subsection">
+                        <h4>Deleted Rows</h4>
+                        <div id="deletedRowsTable"></div>
                     </div>
                 </div>
             </div>
@@ -1068,9 +1059,9 @@
                     paginationSizeSelector: [5, 10, 20],
                     maxHeight: "300px",
                     columns: [
-                        {title: "Test Name", field: "testName", width: 250, minWidth: 200},
-                        {title: "Table", field: "tableName", width: 120, minWidth: 100},
-                        {title: "Row Data", field: "rowInfo", minWidth: 200}
+                        {title: "Test Name", field: "testName", width: 400, minWidth: 300},
+                        {title: "Table", field: "tableName", width: 200, minWidth: 150},
+                        {title: "Row Data", field: "rowInfo", minWidth: 300}
                     ]
                 });
             }
@@ -1093,45 +1084,11 @@
                     paginationSizeSelector: [5, 10, 20],
                     maxHeight: "300px",
                     columns: [
-                        {title: "Test Name", field: "testName", width: 250, minWidth: 200},
-                        {title: "Table", field: "tableName", width: 120, minWidth: 100},
-                        {title: "Row Data", field: "rowInfo", minWidth: 200}
-                    ]
-                });
-            }
-
-            // Modified rows table
-            if (modifiedRows.length === 0) {
-                document.getElementById('modifiedRowsTable').innerHTML = '<div class="empty-state">No modified rows</div>';
-                document.getElementById('modifiedRowsDownload').innerHTML = '';
-            } else {
-                // Create the table
-                new Tabulator("#modifiedRowsTable", {
-                    data: modifiedRows,
-                    layout: "fitColumns",
-                    pagination: "local",
-                    paginationSize: 10,
-                    paginationSizeSelector: [5, 10, 20],
-                    maxHeight: "300px",
-                    columns: [
                         {title: "Test Name", field: "testName", width: 400, minWidth: 300},
-                        {title: "Table", field: "tableName", width: 200, minWidth: 150}
+                        {title: "Table", field: "tableName", width: 200, minWidth: 150},
+                        {title: "Row Data", field: "rowInfo", minWidth: 300}
                     ]
                 });
-
-                // Add download button in separate container if download link is provided
-                if (modifiedRowsDownloadLink && modifiedRowsDownloadLink.trim() !== "") {
-                    document.getElementById('modifiedRowsDownload').innerHTML = `
-                        <div class="simple-download">
-                            <a href="${modifiedRowsDownloadLink}" class="download-link" target="_blank" title="Download modified rows comparison ZIP file">
-                                <span class="download-icon">📦</span>
-                                Download Modified Rows ZIP
-                            </a>
-                        </div>
-                    `;
-                } else {
-                    document.getElementById('modifiedRowsDownload').innerHTML = '';
-                }
             }
         }
 
