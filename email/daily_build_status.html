@@ -14,7 +14,7 @@
                 <!-- VARIABLES SECTION - FOR PYTHON SCRIPT TO MODIFY -->
                 <script type="application/json" id="build-variables">
                 {
-                    "beta_build_status": "SUCCESS",
+                    "beta_build_status": "FAILED",
                     "beta_version": "1.0.0-beta.123",
                     "beta_build_link": "https://build-server.com/builds/beta/123",
                     "failed_tests_count": "5",
@@ -31,7 +31,7 @@
                             <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">TorusE2E Beta Build</h2>
                             <div>
                                 <strong>Status:</strong> <span id="beta-status" style="color: #28a745; font-weight: bold;">✅ Build Successful</span><br>
-                                <strong>Version:</strong> <span id="beta-version">1.0.0-beta.123</span><br>
+                                <span id="beta-version-line"><strong>Version:</strong> <span id="beta-version">1.0.0-beta.123</span><br></span>
                                 <strong>Details:</strong> <a id="beta-link" href="https://build-server.com/builds/beta/123" style="color: #007acc;">View Build Details</a>
                             </div>
                         </td>
@@ -39,7 +39,7 @@
                 </table>
 
                 <!-- Failed Torus Burn Tests Section -->
-                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                <table id="failed-tests-section" width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
                     <tr>
                         <td>
                             <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">Failed Torus Burn Tests</h2>
@@ -51,7 +51,7 @@
                 </table>
 
                 <!-- Rebase Tool Summary Section -->
-                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                <table id="rebase-tool-section" width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
                     <tr>
                         <td>
                             <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">Rebase Tool Summary</h2>
@@ -63,7 +63,7 @@
                 </table>
 
                 <!-- Culprit Finder Summary Section -->
-                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                <table id="culprit-finder-section" width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
                     <tr>
                         <td>
                             <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">Culprit Finder Summary</h2>
@@ -85,30 +85,44 @@
             // Update beta build status
             const betaStatusElement = document.getElementById('beta-status');
             const betaVersionElement = document.getElementById('beta-version');
+            const betaVersionLine = document.getElementById('beta-version-line');
             const betaLinkElement = document.getElementById('beta-link');
             const failedTestsElement = document.getElementById('failed-tests');
+            
+            // Get section elements
+            const failedTestsSection = document.getElementById('failed-tests-section');
+            const rebaseToolSection = document.getElementById('rebase-tool-section');
+            const culpritFinderSection = document.getElementById('culprit-finder-section');
             
             if (variables.beta_build_status === 'FAILED') {
                 betaStatusElement.innerHTML = '❌ Build Failed';
                 betaStatusElement.style.color = '#dc3545';
-                betaVersionElement.textContent = 'N/A';
+                betaVersionLine.style.display = 'none'; // Hide the entire version line
                 betaLinkElement.href = variables.beta_build_link || '#';
-                failedTestsElement.innerHTML = 'N/A (Beta build failed)';
-                failedTestsElement.style.color = '#6c757d';
-                failedTestsElement.style.fontStyle = 'italic';
+                
+                // Hide sections that are not relevant when beta build fails
+                failedTestsSection.style.display = 'none';
+                rebaseToolSection.style.display = 'none';
+                culpritFinderSection.style.display = 'none';
             } else {
                 betaStatusElement.innerHTML = '✅ Build Successful';
                 betaStatusElement.style.color = '#28a745';
+                betaVersionLine.style.display = ''; // Show the version line
                 betaVersionElement.textContent = variables.beta_version;
                 betaLinkElement.href = variables.beta_build_link;
                 failedTestsElement.textContent = variables.failed_tests_count;
                 failedTestsElement.style.color = '';
                 failedTestsElement.style.fontStyle = '';
+                
+                // Show sections when beta build is successful
+                failedTestsSection.style.display = '';
+                rebaseToolSection.style.display = '';
+                culpritFinderSection.style.display = '';
+                
+                // Update links
+                document.getElementById('rebase-tool-link').href = variables.rebase_tool_summary_link;
+                document.getElementById('culprit-finder-link').href = variables.culprit_finder_summary_link;
             }
-            
-            // Update links
-            document.getElementById('rebase-tool-link').href = variables.rebase_tool_summary_link;
-            document.getElementById('culprit-finder-link').href = variables.culprit_finder_summary_link;
         }
         
         // Initialize dashboard on page load
