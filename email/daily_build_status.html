@@ -4,125 +4,78 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TorusE2E Daily Build Status</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            border-bottom: 2px solid #007acc;
-            padding-bottom: 10px;
-        }
-        .section {
-            margin: 20px 0;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fafafa;
-        }
-        .section h2 {
-            color: #007acc;
-            margin-top: 0;
-        }
-        .status-success {
-            color: #28a745;
-            font-weight: bold;
-        }
-        .status-failure {
-            color: #dc3545;
-            font-weight: bold;
-        }
-        .status-na {
-            color: #6c757d;
-            font-style: italic;
-        }
-        a {
-            color: #007acc;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .build-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .version-info {
-            font-size: 0.9em;
-            color: #666;
-        }
-    </style>
 </head>
-<body>
-    <div class="container">
-        <h1>TorusE2E Daily Build Status (Windows)</h1>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: white; border: 1px solid #ddd;">
+        <tr>
+            <td style="padding: 20px;">
+                <h1 style="color: #333; text-align: center; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #007acc;">TorusE2E Daily Build Status (Windows)</h1>
 
-        <!-- VARIABLES SECTION - FOR PYTHON SCRIPT TO MODIFY -->
-        <script type="application/json" id="build-variables">
-        {
-            "beta_build_status": "SUCCESS",
-            "beta_version": "1.0.0-beta.123",
-            "beta_build_link": "https://build-server.com/builds/beta/123",
-            "failed_tests_count": "5",
-            "rebase_tool_summary_link": "https://dashboard.com/rebase-tool/summary",
-            "culprit_finder_summary_link": "https://dashboard.com/culprit-finder/summary"
-        }
-        </script>
-        <!-- END VARIABLES SECTION -->
+                <!-- VARIABLES SECTION - FOR PYTHON SCRIPT TO MODIFY -->
+                <script type="application/json" id="build-variables">
+                {
+                    "beta_build_status": "SUCCESS",
+                    "beta_version": "1.0.0-beta.123",
+                    "beta_build_link": "https://build-server.com/builds/beta/123",
+                    "failed_tests_count": "5",
+                    "rebase_tool_summary_link": "https://dashboard.com/rebase-tool/summary",
+                    "culprit_finder_summary_link": "https://dashboard.com/culprit-finder/summary"
+                }
+                </script>
+                <!-- END VARIABLES SECTION -->
 
-        <!-- TorusE2E Beta Build Section -->
-        <div class="section">
-            <h2>TorusE2E Beta Build</h2>
-            <div class="build-info">
-                <div>
-                    <span id="beta-status" class="status-success">✅ Build Successful</span>
-                    <div class="version-info">
-                        Version: <span id="beta-version">1.0.0-beta.123</span>
-                    </div>
-                </div>
-                <div>
-                    <a id="beta-link" href="https://build-server.com/builds/beta/123" target="_blank">View Build Details</a>
-                </div>
-            </div>
-        </div>
+                <!-- TorusE2E Beta Build Section -->
+                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">TorusE2E Beta Build</h2>
+                            <div>
+                                <strong>Status:</strong> <span id="beta-status" style="color: #28a745; font-weight: bold;">✅ Build Successful</span><br>
+                                <strong>Version:</strong> <span id="beta-version">1.0.0-beta.123</span><br>
+                                <strong>Details:</strong> <a id="beta-link" href="https://build-server.com/builds/beta/123" style="color: #007acc;">View Build Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
 
-        <!-- Failed Torus Burn Tests Section -->
-        <div class="section">
-            <h2>Failed Torus Burn Tests</h2>
-            <div>
-                <span id="failed-tests">5</span> failed test(s)
-            </div>
-        </div>
+                <!-- Failed Torus Burn Tests Section -->
+                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">Failed Torus Burn Tests</h2>
+                            <div>
+                                <strong>Count:</strong> <span id="failed-tests">5</span> failed test(s)
+                            </div>
+                        </td>
+                    </tr>
+                </table>
 
-        <!-- Rebase Tool Summary Section -->
-        <div class="section">
-            <h2>Rebase Tool Summary</h2>
-            <div>
-                <a id="rebase-tool-link" href="https://dashboard.com/rebase-tool/summary" target="_blank">View Rebase Tool Summary</a>
-            </div>
-        </div>
+                <!-- Rebase Tool Summary Section -->
+                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">Rebase Tool Summary</h2>
+                            <div>
+                                <a id="rebase-tool-link" href="https://dashboard.com/rebase-tool/summary" style="color: #007acc;">View Rebase Tool Summary</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
 
-        <!-- Culprit Finder Summary Section -->
-        <div class="section">
-            <h2>Culprit Finder Summary</h2>
-            <div>
-                <a id="culprit-finder-link" href="https://dashboard.com/culprit-finder/summary" target="_blank">View Culprit Finder Summary</a>
-            </div>
-        </div>
-    </div>
+                <!-- Culprit Finder Summary Section -->
+                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">Culprit Finder Summary</h2>
+                            <div>
+                                <a id="culprit-finder-link" href="https://dashboard.com/culprit-finder/summary" style="color: #007acc;">View Culprit Finder Summary</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 
     <script>
         // JavaScript to populate the HTML with variables
@@ -136,19 +89,21 @@
             const failedTestsElement = document.getElementById('failed-tests');
             
             if (variables.beta_build_status === 'FAILED') {
-                betaStatusElement.textContent = '❌ Build Failed';
-                betaStatusElement.className = 'status-failure';
+                betaStatusElement.innerHTML = '❌ Build Failed';
+                betaStatusElement.style.color = '#dc3545';
                 betaVersionElement.textContent = 'N/A';
                 betaLinkElement.href = variables.beta_build_link || '#';
-                failedTestsElement.textContent = 'N/A (Beta build failed)';
-                failedTestsElement.className = 'status-na';
+                failedTestsElement.innerHTML = 'N/A (Beta build failed)';
+                failedTestsElement.style.color = '#6c757d';
+                failedTestsElement.style.fontStyle = 'italic';
             } else {
-                betaStatusElement.textContent = '✅ Build Successful';
-                betaStatusElement.className = 'status-success';
+                betaStatusElement.innerHTML = '✅ Build Successful';
+                betaStatusElement.style.color = '#28a745';
                 betaVersionElement.textContent = variables.beta_version;
                 betaLinkElement.href = variables.beta_build_link;
                 failedTestsElement.textContent = variables.failed_tests_count;
-                failedTestsElement.className = '';
+                failedTestsElement.style.color = '';
+                failedTestsElement.style.fontStyle = '';
             }
             
             // Update links
