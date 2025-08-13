@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TorusE2E Daily Build Status</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; background-color: white; border: 1px solid #ddd;">
+        <tr>
+            <td style="padding: 20px;">
+                <h1 style="color: #333; text-align: center; margin: 0 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #007acc;">TorusE2E Daily Build Status (Windows)</h1>
+
+                <!-- VARIABLES SECTION - FOR PYTHON SCRIPT TO MODIFY -->
+                <script type="application/json" id="build-variables">
+                {
+                    "beta_build_status": "FAILED",
+                    "beta_build_link": "https://build-server.com/builds/beta/123"
+                }
+                </script>
+                <!-- END VARIABLES SECTION -->
+
+                <!-- TorusE2E Beta Build Section -->
+                <table width="100%" cellpadding="10" cellspacing="0" style="margin-bottom: 15px; border: 1px solid #ddd; background-color: #fafafa;">
+                    <tr>
+                        <td>
+                            <h2 style="color: #007acc; margin: 0 0 10px 0; font-size: 16px;">TorusE2E Beta Build</h2>
+                            <div>
+                                <strong>Status:</strong> <span style="color: #dc3545; font-weight: bold;">❌ Build Failed</span><br>
+                                <strong>Details:</strong> <a id="beta-link" href="https://build-server.com/builds/beta/123" style="color: #007acc;">View Build Details</a>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
